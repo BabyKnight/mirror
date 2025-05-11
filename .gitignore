@@ -1,0 +1,6 @@
+activate
+environ
+__pycache__
+*.swp
+scripts/path_env
+db.sqlite3
