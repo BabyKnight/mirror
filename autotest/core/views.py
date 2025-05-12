@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 def ping(request):
     x_forward_for = request.META.get('HTTP_X_FORWARD_FOR')
@@ -7,5 +7,8 @@ def ping(request):
         client_ip = x_forward_for.split(',')[0].strip()
     else:
         client_ip = request.META.get('REMOTE_ADDR')
-    return HttpResponse("Hello"+ client_ip)
+    return HttpResponse("Hello "+ client_ip)
 
+
+def dummy_view(request, *args, **kwargs):
+    return JsonResponse({'detail': 'Not implimented yet'}, status=501)
