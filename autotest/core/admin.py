@@ -6,6 +6,6 @@ admin.site.register(UserProfile)
 admin.site.register(Status)
 admin.site.register(Sample)
 admin.site.register(Image)
-admin.site.register(TaskHistory)
+admin.site.register(Task)
 admin.site.register(TestCase)
 

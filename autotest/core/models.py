@@ -125,9 +125,9 @@ class Image(models.Model):
         )
 
 
-class TaskHistory(models.Model):
+class Task(models.Model):
     """
-    Class definition of TaskHistory
+    Class definition of Task
     """
     TASK_CHOICES = [
         ('Install', 'OS installation'),
