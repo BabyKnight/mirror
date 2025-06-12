@@ -12,3 +12,7 @@ def ping(request):
 
 def dummy_view(request, *args, **kwargs):
     return JsonResponse({'detail': 'Not implimented yet'}, status=501)
+
+
+def dashboard(request):
+    return render(request, 'index.html', {'msg':'Welcome'})

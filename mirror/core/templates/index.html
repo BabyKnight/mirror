@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linux TestLab</title>
+  <link href="{% static '/core/css/tailwind.min.css' %}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-700">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gray-800 text-white p-6 space-y-8">
+      <div class="text-2xl font-bold mb-6">Linux <span>TestLab</span></div>
+      <nav class="space-y-8">
+        <a href="#" class="block py-2 px-4 bg-gray-700 rounded">Dashboard</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Samples</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Tasks</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Images</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Test Cases</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded text-gray-500">Platforms</a>
+      </nav>
+    </aside>
+
+    <!-- Right panel for Main Content -->
+    <main class="flex-1 p-6 space-y-6">
+      
+        <!-- Top Bar -->
+        <div class="w-full flex items-center justify-between bg-white p-4 shadow">
+            <!-- Search box in the center -->
+            <div class="flex-1 flex justify-center">
+                <input type="text" placeholder="Search..." class="w-full max-w-md px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <!-- User Avatar  (register/login) -->
+            <div class="ml-4">
+                <img src="https://i.pravatar.cc/40" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-gray-300">
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold">60</h2>
+                <p class="text-gray-500">Total Samples</p>
+                <span class="text-green-500 text-sm">+12%</span>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold">30</h2>
+                <p class="text-gray-500">Total Platforms</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold">20</h2>
+                <p class="text-gray-500">Failed Test Cases</p>
+                <span class="text-red-500 text-sm">-18.33%</span>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold">25</h2>
+                <p class="text-gray-500">Total Tasks</p>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white rounded-lg shadow-md p-6 col-span-1">
+                <h2 class="text-xl font-semibold mb-4">Platform Status</h2>
+                <canvas id="platformStatusChart" class="w-full h-48"></canvas>
+                <ul class="mt-4 space-y-2 text-sm text-gray-500">
+                    <li><span class="text-green-500 font-bold">•</span> RTSed</li>
+                    <li><span class="text-blue-500 font-bold">•</span> Development Phase</li>
+                </ul>
+            </div>
+
+            <div class="relative bg-white rounded-lg shadow-md p-6 col-span-1">
+                <h2 class="text-xl font-semibold mb-4">Image Released</h2>
+                <canvas id="imageReleaseChart" class="w-full h-48"></canvas>
+                <ul class="absolute bottom-4 space-y-2 text-sm text-gray-500">
+                    <li><span class="text-blue-500 font-bold">•</span> - Edge Image</li>
+                    <li><span class="text-red-500 font-bold">•</span> - Next Images</li>
+                    <li><span class="text-green-500 font-bold">•</span> - Proposed Images</li>
+                    <li><span class="text-purple-500 font-bold">•</span> - Production Images</li>
+                </ul>
+            </div>
+
+            <div class="relative bg-white rounded-lg shadow-md p-6 col-span-1">
+                <h2 class="text-xl font-semibold mb-4">Task Summary</h2>
+                <canvas id="taskSummaryChart" class="w-full h-48"></canvas>
+                <ul class="absolute bottom-4 space-y-2 text-sm text-gray-500">
+                    <li><span class="text-blue-500 font-bold">•</span> Count > 0 means task passed</li>
+                    <li><span class="text-red-500 font-bold">•</span> Count < 0 means task failed</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-lg shadow-md p-6 col-span-2">
+                <h2 class="text-xl font-semibold mb-4">Sample Statistics</h2>
+                <canvas id="sampleChart" class="w-full h-48"></canvas>
+                <p class="text-gray-500 text-sm mt-4">Available Samples for this Week</p>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <div class="text-blue-500 w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">
+                            🛒
+                        </div>
+                        <div class="ml-4">
+                            <p class="font-semibold">Vincent Hu</p>
+                            <p class="text-sm text-gray-500">Triggerd OS installation on TRD4-DVT2-C3. <span class="text-xs">10 Minutes Ago</span></p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="text-red-500 w-8 h-8 flex items-center justify-center bg-red-100 rounded-full">
+                            📩
+                        </div>
+                        <div class="ml-4">
+                            <p class="font-semibold">Vincent Hu</p>
+                            <p class="text-sm text-gray-500">Triggerd checkbox test on JDR-EVT-C1. <span class="text-xs">20 Hours Ago</span></p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="text-yellow-500 w-8 h-8 flex items-center justify-center bg-yellow-100 rounded-full">
+                            📬
+                        </div>
+                        <div class="ml-4">
+                            <p class="font-semibold">Vincent Hu</p>
+                            <p class="text-sm text-gray-500">Triggered a full test on GRSP6-DVT2-C1X. <span class="text-xs">2 Days Ago</span></p>
+                        </div>
+                    </li>
+                </ul>
+                <button class="text-blue-500 text-sm mt-4">Load More</button>
+            </div>
+        </div>
+
+        <!-- Top Tasks -->
+        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Top Tasks</h2>
+            <table class="table-auto w-full text-left">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">ID</th>
+                        <th class="px-4 py-2">SKU/Platform</th>
+                        <th class="px-4 py-2">Task Type</th>
+                        <th class="px-4 py-2">Image/Kernel</th>
+                        <th class="px-4 py-2">Status</th>
+                        <th class="px-4 py-2">Trigger</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-gray-50">
+                        <td class="border px-4 py-2">#1</td>
+                        <td class="border px-4 py-2">
+                            <div class="flex items-center">
+                                <div class="ml-4">
+                                    <p class="font-semibold">TRD4-DVT2-C3</p>
+                                    <p class="text-sm text-gray-500">Taroko ARL 14</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="border px-4 py-2">
+                            <div class="flex space-x-2">
+                                <span class="bg-blue-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">I</span>
+                                <span class="bg-red-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">C</span>
+                                <span class="bg-green-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">F</span>
+                                <span class="bg-gray-300 w-6 h-6 text-gray-700 text-sm flex items-center justify-center rounded-full">+</span>
+                            </div>
+                        </td>
+                        <td class="border px-4 py-2">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">Proposed</span>
+                            <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">1020</span>
+                        </td>
+                        <td class="border px-4 py-2">
+                            <span class="w-4 h-4 bg-blue-500 block rounded-full"></span>
+                            <!--
+                            <span class="w-4 h-4 bg-green-500 block rounded-full"></span>
+                            <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
+                            <span class="w-4 h-4 bg-purple-500 block rounded-full"></span>
+                            <span class="w-4 h-4 bg-gray-200 block rounded-full"></span>
+                            <span class="w-4 h-4 bg-yellow-500 block rounded-full"></span>
+                            -->
+                        </td>
+                        <td class="border px-4 py-2">
+                            <div class="flex items-center">
+                                <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full">
+                                <div class="ml-4">
+                                    <p class="font-semibold">Vincent Hu</p>
+                                    <p class="text-sm text-gray-500">22 Minutes Ago</p>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Repeat similar structure for other rows -->
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- Samples -->
+        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Samples</h2>
+            <table class="table-auto w-full text-left">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">No.</th>
+                        <th class="px-4 py-2">Platform</th>
+                        <th class="px-4 py-2">SKU</th>
+                        <th class="px-4 py-2">SSID</th>
+                        <th class="px-4 py-2">Service Tag</th>
+                        <th class="px-4 py-2">IP Address</th>
+                        <th class="px-4 py-2">Owner</th>
+                        <th class="px-4 py-2">Current User</th>
+                        <th class="px-4 py-2">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-gray-50">
+                        <td class="border px-4 py-2">#1</td>
+                        <td class="border px-4 py-2">Taroko ARL 14</td>
+                        <td class="border px-4 py-2">TRD4-DVT2-C3</td>
+                        <td class="border px-4 py-2">0x53bc</td>
+                        <td class="border px-4 py-2">12GT7H8</td>
+                        <td class="border px-4 py-2">192.168.0.100</td>
+                        <td class="border px-4 py-2">Vincent Hu</td>
+                        <td class="border px-4 py-2">Vincent Hu</td>
+                        <td class="border px-4 py-2">
+                            <span class="w-4 h-4 bg-purple-500 block rounded-full"></span>
+                        </td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="border px-4 py-2">#1</td>
+                        <td class="border px-4 py-2">Taroko ARL 14</td>
+                        <td class="border px-4 py-2">TRD4-DVT2-C3</td>
+                        <td class="border px-4 py-2">0x53bc</td>
+                        <td class="border px-4 py-2">12GT7H8</td>
+                        <td class="border px-4 py-2">192.168.0.100</td>
+                        <td class="border px-4 py-2">Vincent Hu</td>
+                        <td class="border px-4 py-2">Vincent Hu</td>
+                        <td class="border px-4 py-2">
+                            <span class="w-4 h-4 bg-purple-500 block rounded-full"></span>
+                        </td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="border px-4 py-2">#1</td>
+                        <td class="border px-4 py-2">Taroko ARL 14</td>
+                        <td class="border px-4 py-2">TRD4-DVT2-C3</td>
+                        <td class="border px-4 py-2">0x53bc</td>
+                        <td class="border px-4 py-2">12GT7H8</td>
+                        <td class="border px-4 py-2">192.168.0.100</td>
+                        <td class="border px-4 py-2">Vincent Hu</td>
+                        <td class="border px-4 py-2">Vincent Hu</td>
+                        <td class="border px-4 py-2">
+                            <span class="w-4 h-4 bg-purple-500 block rounded-full"></span>
+                        </td>
+                    </tr>
+                    <!-- Repeat similar structure for other rows -->
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+<!-- Images -->
+        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Images</h2>
+            <table class="table-auto w-full text-left">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">No.</th>
+                        <th class="px-4 py-2">Image Name</th>
+                        <th class="px-4 py-2">Category</th>
+                        <th class="px-4 py-2">Version</th>
+                        <th class="px-4 py-2">Kernel Version</th>
+                        <th class="px-4 py-2">Release Date</th>
+                        <th class="px-4 py-2">File Size</th>
+                        <th class="px-4 py-2">SHA256</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-gray-50">
+                        <td class="border px-4 py-2">#1</td>
+                        <td class="border px-4 py-2">somerville-noble-24.04b-20250611-proposed-509.iso</td>
+                        <td class="border px-4 py-2">Proposed</td>
+                        <td class="border px-4 py-2">509</td>
+                        <td class="border px-4 py-2">6.11.0-1024</td>
+                        <td class="border px-4 py-2">2025.06.11</td>
+                        <td class="border px-4 py-2">5.6G</td>
+                        <td class="border px-4 py-2">77fa7d6fd748415efd21283ae193d433e087cf6e86e483016d21065374fc6c5f</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="border px-4 py-2">#1</td>
+                        <td class="border px-4 py-2">somerville-noble-24.04b-20250611-proposed-509.iso</td>
+                        <td class="border px-4 py-2">Proposed</td>
+                        <td class="border px-4 py-2">509</td>
+                        <td class="border px-4 py-2">6.11.0-1024</td>
+                        <td class="border px-4 py-2">2025.06.11</td>
+                        <td class="border px-4 py-2">5.6G</td>
+                        <td class="border px-4 py-2">77fa7d6fd748415efd21283ae193d433e087cf6e86e483016d21065374fc6c5f</td>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <td class="border px-4 py-2">#1</td>
+                        <td class="border px-4 py-2">somerville-noble-24.04b-20250611-proposed-509.iso</td>
+                        <td class="border px-4 py-2">Proposed</td>
+                        <td class="border px-4 py-2">509</td>
+                        <td class="border px-4 py-2">6.11.0-1024</td>
+                        <td class="border px-4 py-2">2025.06.11</td>
+                        <td class="border px-4 py-2">5.6G</td>
+                        <td class="border px-4 py-2">77fa7d6fd748415efd21283ae193d433e087cf6e86e483016d21065374fc6c5f</td>
+                    </tr>
+                    <!-- Repeat similar structure for other rows -->
+                </tbody>
+            </table>
+        </div>
+
+
+
+<!-- Test Cases -->
+        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Test Cases</h2>
+            <table class="table-auto w-full text-left">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">No.</th>
+                        <th class="px-4 py-2">Case No.</th>
+                        <th class="px-4 py-2">Name</th>
+                        <th class="px-4 py-2">Description</th>
+                        <th class="px-4 py-2">Steps</th>
+                        <th class="px-4 py-2">version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-gray-50">
+                        <td class="border px-4 py-2">#1</td>
+                        <td class="border px-4 py-2">60030</td>
+                        <td class="border px-4 py-2">Warm Boot Stress</td>
+                        <td class="border px-4 py-2">Checkbox warmboot stress test</td>
+                        <td class="border px-4 py-2">N/A</td>
+                        <td class="border px-4 py-2">09</td>
+                    </tr>
+                    <!-- Repeat similar structure for other rows -->
+                </tbody>
+            </table>
+        </div>
+
+
+
+    </div>
+
+
+
+
+    <script src="{% static 'core/js/chart.js' %}"></script>
+    <script>
+        const sampleCtx = document.getElementById('sampleChart').getContext('2d');
+        new Chart(sampleCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Earnings',
+                    data: [12, 15, 19, 28, 24, 18, 35],
+                    borderColor: '#6366F1',
+                    backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { color: '#f1f5f9' }, beginAtZero: true }
+                }
+            }
+        });
+
+        const platStCtx = document.getElementById('platformStatusChart').getContext('2d');
+        new Chart(platStCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Development Phase', 'RTSed'],
+                datasets: [{
+                    data: [11, 25],
+                    backgroundColor: ['#6366F1', '#34D399']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        const imgReleaseCtx = document.getElementById('imageReleaseChart').getContext('2d');
+        new Chart(imgReleaseCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Edge',
+                    data: [4, 1, 2, 0, 1, 2],
+                    backgroundColor: '#6366F1'
+                },
+                {
+                    label: 'Next',
+                    data: [0, 2, 0, 3, 6, 1],
+                    backgroundColor: '#F87171'
+                },
+            {
+                    label: 'Proposed',
+                    data: [5, 3, 7, 8, 6, 10],
+                    backgroundColor: '#34D399'
+                },
+            {
+                    label: 'Production',
+                    data: [0, 0, 1, 2, 2, 1],
+                    backgroundColor: '#8B5CF6'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { color: '#f1f5f9' }, beginAtZero: true }
+                }
+            }
+        });
+
+
+        const taskSumCtx = document.getElementById('taskSummaryChart').getContext('2d');
+        new Chart(taskSumCtx, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                datasets: [
+                {
+                    label: 'Installation Passed',
+                    data: [11, 25, 16, 21, 40, 37],
+                    backgroundColor: ['#F87171']
+                },
+                {
+                    label: 'Checkbox Passed',
+                    data: [20, 15, 27, 15, 32, 28],
+                    backgroundColor: ['#60A5FA']
+                },
+                {
+                    label: 'Installation Failed',
+                    data: [-2, -1, 0, 0, -7, -4],
+                    backgroundColor: ['#F87171']
+                },
+                {
+                    label: 'Checkbox Failed',
+                    data: [-10, -6, -7, -9, -2, -7],
+                    backgroundColor: ['#60A5FA']
+                },
+                ]
+            },
+            options: {
+                indexAxis: 'x',  // <-- This makes it horizontal
+                responsive: true,
+                plugins: {
+                    legend: { display: false}
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+
+
+
+
+
+</body>
+</html>
