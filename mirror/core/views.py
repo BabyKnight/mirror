@@ -1,7 +1,7 @@
 from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
-from .models import Sample, Image, Task
+from .models import Sample, Image, Task, TestCase
 
 
 def ping(request):
@@ -42,16 +42,29 @@ def dashboard(request):
     sample_list = []
 
     for i in samples:
-        sample_info = model_to_dict(i)
-        sample_list.append(sample_info)
+        sample_list.append(model_to_dict(i))
 
     # search for Images
+    images = Image.objects.all()
+    img_list = []
+
+    for i in images:
+        img_list.append(model_to_dict(i))
+
+    # search for Test cases
+    tc = TestCase.objects.all()
+    tc_list = []
+
+    for i in tc:
+        tc_list.append(model_to_dict(i))
 
     context = {
         "samples": samples,
         "platforms": platforms,
         "failed_cases": failed_cases,
         "tasks": tasks,
-        "sample_list": sample_list
+        "sample_list": sample_list,
+        "image_list": img_list,
+        "testcase_list": tc_list
         }
     return render(request, 'index.html', context)
