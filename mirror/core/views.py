@@ -49,7 +49,9 @@ def dashboard(request):
     img_list = []
 
     for i in images:
-        img_list.append(model_to_dict(i))
+        img = model_to_dict(i)
+        img['release_date'] = img['release_date'].strftime("%Y-%m-%d")
+        img_list.append(img)
 
     # search for Test cases
     tc = TestCase.objects.all()

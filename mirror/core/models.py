@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator, MaxValueValidator
+from django.utils import timezone
 
 
 class UserProfile(models.Model):
@@ -102,13 +103,13 @@ class Image(models.Model):
         ('edge', 'Edge'),
         ('next', 'Next'),
         ('proposed', 'Proposed'),
-        ('', 'Production'),
+        ('production', 'Production'),
     ]
     image_name = models.CharField(max_length=60, unique=True)
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, default='', blank=True)
     image_version = models.PositiveIntegerField(validators=[MaxValueValidator(999)])
     kernel_version = models.CharField(max_length=30)
-    release_date = models.TimeField(auto_now_add=True)
+    release_date = models.DateTimeField(default=timezone.now)
     file_path = models.CharField(max_length=200, blank=False)
     file_size = models.DecimalField(max_digits=4, decimal_places=2)
     # Temporarily allow non-unique sha256 hash, even same file in different filename
