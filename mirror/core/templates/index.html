@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linux TestLab</title>
+  <title>Linux Team Automatic Test Lab</title>
   <link href="{% static '/core/css/tailwind.min.css' %}" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
@@ -17,7 +17,7 @@
   <div class="flex min-h-screen">
     <!-- Sidebar -->
     <aside class="w-64 bg-gray-800 text-white p-6 space-y-8">
-      <div class="text-2xl font-bold mb-6">Linux <span>TestLab</span></div>
+      <div class="text-2xl font-bold mb-6">Linux <span>Test Lab</span></div>
       <nav class="space-y-8">
         <a href="#" class="block py-2 px-4 bg-gray-700 rounded">Dashboard</a>
         <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Samples</a>
@@ -45,24 +45,22 @@
 
         <!-- Main content -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold">60</h2>
-                <p class="text-gray-500">Total Samples</p>
-                <span class="text-green-500 text-sm">+12%</span>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold">30</h2>
-                <p class="text-gray-500">Total Platforms</p>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold">20</h2>
-                <p class="text-gray-500">Failed Test Cases</p>
-                <span class="text-red-500 text-sm">-18.33%</span>
-            </div>
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-2xl font-bold">25</h2>
-                <p class="text-gray-500">Total Tasks</p>
-            </div>
+            {% for i in "1234" %}
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-2xl font-bold">{{ samples.total }}</h2>
+                    <p class="text-gray-500">Total Samples</p>
+                    <span class="text-green-500 text-sm">
+                        {% if samples.changes > 0 %}
+                            +
+                        {% endif %}
+                        {% if samples.changes == 0 %}
+                            0
+                        {% else %}
+                            {{ samples.changes|floatformat:2 }}%
+                        {% endif %}
+                    </span>
+                </div>
+            {% endfor %}
         </div>
 
         <!-- Charts -->
@@ -223,46 +221,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="bg-gray-50">
-                        <td class="border px-4 py-2">#1</td>
-                        <td class="border px-4 py-2">Taroko ARL 14</td>
-                        <td class="border px-4 py-2">TRD4-DVT2-C3</td>
-                        <td class="border px-4 py-2">0x53bc</td>
-                        <td class="border px-4 py-2">12GT7H8</td>
-                        <td class="border px-4 py-2">192.168.0.100</td>
-                        <td class="border px-4 py-2">Vincent Hu</td>
-                        <td class="border px-4 py-2">Vincent Hu</td>
-                        <td class="border px-4 py-2">
-                            <span class="w-4 h-4 bg-purple-500 block rounded-full"></span>
-                        </td>
-                    </tr>
-                    <tr class="bg-gray-50">
-                        <td class="border px-4 py-2">#1</td>
-                        <td class="border px-4 py-2">Taroko ARL 14</td>
-                        <td class="border px-4 py-2">TRD4-DVT2-C3</td>
-                        <td class="border px-4 py-2">0x53bc</td>
-                        <td class="border px-4 py-2">12GT7H8</td>
-                        <td class="border px-4 py-2">192.168.0.100</td>
-                        <td class="border px-4 py-2">Vincent Hu</td>
-                        <td class="border px-4 py-2">Vincent Hu</td>
-                        <td class="border px-4 py-2">
-                            <span class="w-4 h-4 bg-purple-500 block rounded-full"></span>
-                        </td>
-                    </tr>
-                    <tr class="bg-gray-50">
-                        <td class="border px-4 py-2">#1</td>
-                        <td class="border px-4 py-2">Taroko ARL 14</td>
-                        <td class="border px-4 py-2">TRD4-DVT2-C3</td>
-                        <td class="border px-4 py-2">0x53bc</td>
-                        <td class="border px-4 py-2">12GT7H8</td>
-                        <td class="border px-4 py-2">192.168.0.100</td>
-                        <td class="border px-4 py-2">Vincent Hu</td>
-                        <td class="border px-4 py-2">Vincent Hu</td>
-                        <td class="border px-4 py-2">
-                            <span class="w-4 h-4 bg-purple-500 block rounded-full"></span>
-                        </td>
-                    </tr>
-                    <!-- Repeat similar structure for other rows -->
+                    {% for item in sample_list %}
+                        <tr class="bg-gray-50">
+                            <td class="border px-4 py-2">#{{ item.id}}</td>
+                            <td class="border px-4 py-2">{{ item.platform }}</td>
+                            <td class="border px-4 py-2">{{ item.sku }}</td>
+                            <td class="border px-4 py-2">{{ item.ssid }}</td>
+                            <td class="border px-4 py-2">{{ item.service_tag }}</td>
+                            <td class="border px-4 py-2">{{ item.ip }}</td>
+                            <td class="border px-4 py-2">{{ item.owner }}</td>
+                            <td class="border px-4 py-2">{{ item.current_user }}</td>
+                            <td class="border px-4 py-2">
+                                <span class="w-4 h-4 bg-purple-500 block rounded-full"></span>
+                            </td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
