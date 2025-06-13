@@ -42,7 +42,12 @@ def dashboard(request):
     sample_list = []
 
     for i in samples:
-        sample_list.append(model_to_dict(i))
+        sp = model_to_dict(i)
+        if i.owner:
+            sp['owner'] = i.owner.user.get_full_name()
+        if i.current_user:
+            sp['current_user'] = i.current_user.user.get_full_name()
+        sample_list.append(sp)
 
     # search for Images
     images = Image.objects.all()
@@ -50,7 +55,7 @@ def dashboard(request):
 
     for i in images:
         img = model_to_dict(i)
-        img['release_date'] = img['release_date'].strftime("%Y-%m-%d")
+        img['release_date'] = i.release_date.strftime("%Y-%m-%d")
         img_list.append(img)
 
     # search for Test cases
