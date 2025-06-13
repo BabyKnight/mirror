@@ -135,10 +135,17 @@ class Task(models.Model):
         ('Test', 'Test Case Running'),
         ('Full', 'OS installation and Test Case Running'),
     ]
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('running', 'Running'),
+        ('complete', 'Complete'),
+        ('unknown', 'Unkonwn'),
+    ]
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
     image = models.ForeignKey(Image, on_delete=models.CASCADE)
     task_category = models.CharField(max_length=10, choices=TASK_CHOICES, blank=False)
     result = models.BooleanField(default=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=False, default='unknown')
     trigger_by = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name="tasks")
     log = models.CharField(max_length=50, null=True, blank=True)
 

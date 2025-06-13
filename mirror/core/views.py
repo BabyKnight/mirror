@@ -43,11 +43,13 @@ def dashboard(request):
 
     for i in all_task:
         tsk = model_to_dict(i)
+        tsk['type'] = i.task_category[0]
         tsk['platform_name'] = i.sample.platform
         tsk['sku'] = i.sample.sku
         tsk['image_cat'] = i.image.category
         tsk['kernel_ver'] = i.image.kernel_version.split('-')[-1]
         tsk['trigger_by'] = i.trigger_by.user.get_full_name()
+        tsk['st'] = i.status[0]
         task_list.append(tsk)
 
     # search for Samples
@@ -60,6 +62,7 @@ def dashboard(request):
             sp['owner'] = i.owner.user.get_full_name()
         if i.current_user:
             sp['current_user'] = i.current_user.user.get_full_name()
+        sp['st'] = i.status.code[0]
         sample_list.append(sp)
 
     # search for Images

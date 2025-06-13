@@ -168,9 +168,13 @@
                         </td>
                         <td class="border px-4 py-2">
                             <div class="flex space-x-2">
-                                <span class="bg-blue-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">I</span>
-                                <span class="bg-red-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">C</span>
-                                <span class="bg-green-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">F</span>
+                                {% if item.type == "I" %}
+                                    <span class="bg-blue-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">I</span>
+                                {% elif item.type == "T" %}
+                                    <span class="bg-purple-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">T</span>
+                                {% elif item.type == "F" %}
+                                    <span class="bg-green-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">F</span>
+                                {% endif %}
                                 <span class="bg-gray-300 w-6 h-6 text-gray-700 text-sm flex items-center justify-center rounded-full">+</span>
                             </div>
                         </td>
@@ -179,14 +183,15 @@
                             <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">{{ item.kernel_ver }}</span>
                         </td>
                         <td class="border px-4 py-2">
-                            <span class="w-4 h-4 bg-blue-500 block rounded-full"></span>
-                            <!--
-                            <span class="w-4 h-4 bg-green-500 block rounded-full"></span>
-                            <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
-                            <span class="w-4 h-4 bg-purple-500 block rounded-full"></span>
-                            <span class="w-4 h-4 bg-gray-200 block rounded-full"></span>
-                            <span class="w-4 h-4 bg-yellow-500 block rounded-full"></span>
-                            -->
+                            {% if item.st == 'p' %}
+                                <span class="w-4 h-4 bg-yellow-500 block rounded-full"></span>
+                            {% elif item.st == 'r' %}
+                                <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
+                            {% elif item.st == 'c' %}
+                                <span class="w-4 h-4 bg-green-500 block rounded-full"></span>
+                            {% elif item.st == 'u' %}
+                                <span class="w-4 h-4 bg-gray-200 block rounded-full"></span>
+                            {% endif %}
                         </td>
                         <td class="border px-4 py-2">
                             <div class="flex items-center">
@@ -234,7 +239,13 @@
                             <td class="border px-4 py-2">{{ item.owner }}</td>
                             <td class="border px-4 py-2">{{ item.current_user }}</td>
                             <td class="border px-4 py-2">
-                                <span class="w-4 h-4 bg-purple-500 block rounded-full"></span>
+                                {% if item.st == '0' %}
+                                    <span class="w-4 h-4 bg-gray-300 block rounded-full"></span>
+                                {% elif item.st == '1' %}
+                                    <span class="w-4 h-4 bg-green-300 block rounded-full"></span>
+                                {% else %}
+                                    <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
