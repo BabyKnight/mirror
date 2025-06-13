@@ -56,6 +56,8 @@ def dashboard(request):
     for i in images:
         img = model_to_dict(i)
         img['release_date'] = i.release_date.strftime("%Y-%m-%d")
+        img['kernel_main_version'] = i.kernel_version.split("-")[0]
+        img['kernel_build_version'] = i.kernel_version.split("-")[1]
         img_list.append(img)
 
     # search for Test cases
