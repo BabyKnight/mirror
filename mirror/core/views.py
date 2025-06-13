@@ -36,7 +36,20 @@ def dashboard(request):
         "changes": 0
         }
 
+
     # search for Task
+    all_task = Task.objects.all()
+    task_list = []
+
+    for i in all_task:
+        tsk = model_to_dict(i)
+        tsk['platform_name'] = i.sample.platform
+        tsk['sku'] = i.sample.sku
+        tsk['image_cat'] = i.image.category
+        tsk['kernel_ver'] = i.image.kernel_version.split('-')[-1]
+        tsk['trigger_by'] = i.trigger_by.user.get_full_name()
+        task_list.append(tsk)
+
     # search for Samples
     samples = Sample.objects.all()
     sample_list = []
@@ -74,6 +87,7 @@ def dashboard(request):
         "tasks": tasks,
         "sample_list": sample_list,
         "image_list": img_list,
-        "testcase_list": tc_list
+        "testcase_list": tc_list,
+        "task_list": task_list
         }
     return render(request, 'index.html', context)
