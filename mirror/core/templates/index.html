@@ -107,33 +107,17 @@
             <div class="bg-white rounded-lg shadow-md p-6">
                 <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
                 <ul class="space-y-4">
+                    {% for item in activity_list %}
                     <li class="flex items-start">
                         <div class="text-blue-500 w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">
                             🛒
                         </div>
                         <div class="ml-4">
-                            <p class="font-semibold">Vincent Hu</p>
-                            <p class="text-sm text-gray-500">Triggerd OS installation on TRD4-DVT2-C3. <span class="text-xs">10 Minutes Ago</span></p>
+                            <p class="font-semibold">{{ item.user }}</p>
+                            <p class="text-sm text-gray-500">{{ item.detail }}<span class="text-xs">&nbsp;{{ item.time }}</span></p>
                         </div>
                     </li>
-                    <li class="flex items-start">
-                        <div class="text-red-500 w-8 h-8 flex items-center justify-center bg-red-100 rounded-full">
-                            📩
-                        </div>
-                        <div class="ml-4">
-                            <p class="font-semibold">Vincent Hu</p>
-                            <p class="text-sm text-gray-500">Triggerd checkbox test on JDR-EVT-C1. <span class="text-xs">20 Hours Ago</span></p>
-                        </div>
-                    </li>
-                    <li class="flex items-start">
-                        <div class="text-yellow-500 w-8 h-8 flex items-center justify-center bg-yellow-100 rounded-full">
-                            📬
-                        </div>
-                        <div class="ml-4">
-                            <p class="font-semibold">Vincent Hu</p>
-                            <p class="text-sm text-gray-500">Triggered a full test on GRSP6-DVT2-C1X. <span class="text-xs">2 Days Ago</span></p>
-                        </div>
-                    </li>
+                    {% endfor %}
                 </ul>
                 <button class="text-blue-500 text-sm mt-4">Load More</button>
             </div>
@@ -198,7 +182,7 @@
                                 <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full">
                                 <div class="ml-4">
                                     <p class="font-semibold">{{ item.trigger_by }}</p>
-                                    <p class="text-sm text-gray-500">22 Minutes Ago</p>
+                                    <p class="text-sm text-gray-500">{{ item.trigger_at }}</p>
                                 </div>
                             </div>
                         </td>
@@ -233,7 +217,11 @@
                             <td class="border px-4 py-2">#{{ item.id}}</td>
                             <td class="border px-4 py-2">{{ item.platform }}</td>
                             <td class="border px-4 py-2">{{ item.sku }}</td>
-                            <td class="border px-4 py-2">0x{{ item.ssid }}</td>
+                            <td class="border px-4 py-2">
+                                <span class="bg-gray-200 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-900 dark:text-gray-300">
+                                    0x{{ item.ssid }}
+                                </span>
+                            </td>
                             <td class="border px-4 py-2">{{ item.service_tag }}</td>
                             <td class="border px-4 py-2">{{ item.ip }}</td>
                             <td class="border px-4 py-2">{{ item.owner }}</td>

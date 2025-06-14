@@ -85,7 +85,7 @@ class Sample(models.Model):
     status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True, related_name='samples') 
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='owned_samples')
     current_user = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='sample_in_use')
-    last_update = models.TimeField(auto_now_add=True)
+    last_update = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return "<{}: {} ({})>".format(
@@ -147,6 +147,9 @@ class Task(models.Model):
     result = models.BooleanField(default=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=False, default='unknown')
     trigger_by = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name="tasks")
+    time_trigger = models.DateTimeField(default=timezone.now)
+    time_start = models.DateTimeField(null=True, blank=True)
+    time_complete = models.DateTimeField(null=True, blank=True)
     log = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
