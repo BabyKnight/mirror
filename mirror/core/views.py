@@ -28,15 +28,59 @@ def index(request):
     task_sum_chart_data = get_chart_data('task_result_sum')
     task_st_chart_data = get_chart_data('task_st_this_week')
 
+    # recent activity
+    now = datetime.now(timezone.utc)
+    all_task = Task.objects.order_by('-time_trigger')[:5]
+    activity_list = []
+
+    for i in all_task:
+        activity = {}
+        activity['user'] = i.trigger_by.user.get_full_name()
+        activity['detail'] = "Trigger " +   i.get_task_category_display() + " on " + i.sample.sku +"."
+
+        total_sec = (now - i.time_trigger).total_seconds()
+        if total_sec < 3600:
+            activity['time'] = str(int(total_sec // 60)) + ' Minutes Ago'
+        elif total_sec < 86400:
+            activity['time'] = str(int(total_sec // 3600)) + ' Hours Ago'
+        else:
+            activity['time'] = str(int(total_sec // 86400)) + ' Days Ago'
+
+        activity_list.append(activity)
+
+    # search for Task
+    all_task = Task.objects.all()
+    task_list = []
+
+    #now = datetime.now(timezone.utc)
+
+    for i in all_task:
+        tsk = model_to_dict(i)
+        tsk['type'] = i.task_category[0]
+        tsk['platform_name'] = i.sample.platform
+        tsk['sku'] = i.sample.sku
+        tsk['image_cat'] = i.image.category
+        tsk['kernel_ver'] = i.image.kernel_version.split('-')[-1]
+        tsk['trigger_by'] = i.trigger_by.user.get_full_name()
+        tsk['st'] = i.status[0]
+        total_sec = (now - i.time_trigger).total_seconds()
+        if total_sec < 3600:
+            tsk['trigger_at'] = str(int(total_sec // 60)) + ' Minutes Ago'
+        elif total_sec < 86400:
+            tsk['trigger_at'] = str(int(total_sec // 3600)) + ' Hours Ago'
+        else:
+            tsk['trigger_at'] = str(int(total_sec // 86400)) + ' Days Ago'
+
+        task_list.append(tsk)
 
     context = {
         "image_chart_data": image_chart_data,
         "task_sum_chart_data": task_sum_chart_data,
         "task_st_chart_data": task_st_chart_data,
+        "activity_list": activity_list,
+        "task_list": task_list,
     }
     return render(request, 'index.html', context)
-
-
 
 
 def index_backup(request):
