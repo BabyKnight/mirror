@@ -155,14 +155,15 @@
 
 {% block extra_js%}
 <script>
+    const tskStChartData = {{ task_st_chart_data|safe }}
     const sampleCtx = document.getElementById('taskCountChart').getContext('2d');
     new Chart(sampleCtx, {
         type: 'line',
         data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: tskStChartData['label'],
             datasets: [{
                 label: 'Earnings',
-                data: [12, 15, 19, 28, 24, 18, 35],
+                data: tskStChartData['dataset'],
                 borderColor: '#6366F1',
                 backgroundColor: 'rgba(99, 102, 241, 0.2)',
                 tension: 0.4

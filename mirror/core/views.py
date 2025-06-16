@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from .models import Sample, Image, Task, TestCase
 from datetime import datetime, timezone, timedelta
 from django.db.models import Count, Q
-from django.db.models.functions import TruncMonth
+from django.db.models.functions import TruncMonth, TruncDate
 
 
 def ping(request):
@@ -26,11 +26,13 @@ def index(request):
     # image chart
     image_chart_data = get_chart_data('image')
     task_sum_chart_data = get_chart_data('task_result_sum')
+    task_st_chart_data = get_chart_data('task_st_this_week')
 
 
     context = {
         "image_chart_data": image_chart_data,
         "task_sum_chart_data": task_sum_chart_data,
+        "task_st_chart_data": task_st_chart_data,
     }
     return render(request, 'index.html', context)
 
@@ -409,7 +411,7 @@ def chart(request, chart_type):
         - platform
         - image
         - task_result_sum
-        - task_statistics_this_week
+        - task_st_this_week
     """
     return JsonResponse(get_chart_data(chart_type))
 
@@ -421,7 +423,7 @@ def get_chart_data(chart_type):
         - platform
         - image
         - task_result_sum
-        - task_statistics_this_week
+        - task_st_this_week
     """
 
     # time defined for filter
@@ -496,8 +498,22 @@ def get_chart_data(chart_type):
             dataset['i'][key] = [data_i + data_f for data_i, data_f in zip(dataset['i'][key], dataset['f'][key])]
             dataset['t'][key] = [data_i + data_f for data_i, data_f in zip(dataset['t'][key], dataset['f'][key])]
 
-    elif chart_type == 'task_statistics_this_week':
-        pass
+    elif chart_type == 'task_st_this_week':
+
+        # label for the chart (weekday)
+        day_of_week = []
+        for i in range(7):
+            day = now - timedelta(days=i)
+            day_of_week.append(day.strftime('%a'))
+        label = day_of_week[::-1]
+
+        dataset = [0] * 7
+
+        task_per_day = Task.objects.filter(time_trigger__gte=start_of_week).annotate(
+            day=TruncDate('time_trigger')).values('day').annotate(count=Count('id')).order_by('day')
+        for i in task_per_day:
+            dataset[label.index(i['day'].strftime('%a'))] = i['count']
+
 
     elif chart_type == 'platform':
         pass
