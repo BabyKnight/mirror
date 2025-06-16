@@ -198,29 +198,30 @@
         }
     });
 
+    const imgChartData = {{ image_chart_data| safe }}
     const imgReleaseCtx = document.getElementById('imageCatChart').getContext('2d');
     new Chart(imgReleaseCtx, {
         type: 'bar',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            labels: imgChartData['label'],
             datasets: [{
                 label: 'Edge',
-                data: [4, 1, 2, 0, 1, 2],
+                data: imgChartData['dataset']['edge'],
                 backgroundColor: '#6366F1'
             },
             {
                 label: 'Next',
-                data: [0, 2, 0, 3, 6, 1],
+                data: imgChartData['dataset']['next'],
                 backgroundColor: '#F87171'
             },
             {
                 label: 'Proposed',
-                data: [5, 3, 7, 8, 6, 10],
+                data: imgChartData['dataset']['proposed'],
                 backgroundColor: '#34D399'
             },
             {
                 label: 'Production',
-                data: [0, 0, 1, 2, 2, 1],
+                data: imgChartData['dataset']['production'],
                 backgroundColor: '#8B5CF6'
             }]
         },

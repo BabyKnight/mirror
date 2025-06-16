@@ -457,8 +457,8 @@ def get_chart_data(chart_type):
         dataset = {}
         for i in cat_list:
             dataset[i] = [0] * 6
-            for info_by_month in img_cat_info:
-                dataset[i][past_6_month.index(info_by_month['month'])] = info_by_month['count']
+        for info_by_month in img_cat_info:
+            dataset[info_by_month['category']][past_6_month.index(info_by_month['month'])] = info_by_month['count']
      
     else:
         sample_added_this_month = Sample.objects.filter(time_created__gte=first_day_of_month)
