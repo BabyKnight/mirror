@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from .models import Sample, Image, Task, TestCase
 from datetime import datetime, timezone, timedelta
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth
 
 
@@ -25,11 +25,12 @@ def index(request):
 
     # image chart
     image_chart_data = get_chart_data('image')
-
+    task_sum_chart_data = get_chart_data('task_result_sum')
 
 
     context = {
         "image_chart_data": image_chart_data,
+        "task_sum_chart_data": task_sum_chart_data,
     }
     return render(request, 'index.html', context)
 
@@ -407,8 +408,8 @@ def chart(request, chart_type):
     Availble chart type:
         - platform
         - image
-        - task
-        - sample
+        - task_result_sum
+        - task_statistics_this_week
     """
     return JsonResponse(get_chart_data(chart_type))
 
@@ -419,8 +420,8 @@ def get_chart_data(chart_type):
     Availble chart type:
         - platform
         - image
-        - task
-        - sample
+        - task_result_sum
+        - task_statistics_this_week
     """
 
     # time defined for filter
@@ -432,7 +433,6 @@ def get_chart_data(chart_type):
     label = []
 
     if chart_type == 'image':
-
 
         # label for the bar chart (past 6 month)
         past_6_month = []
@@ -460,6 +460,49 @@ def get_chart_data(chart_type):
         for info_by_month in img_cat_info:
             dataset[info_by_month['category']][past_6_month.index(info_by_month['month'])] = info_by_month['count']
      
+    elif chart_type == 'task_result_sum':
+
+        # label for the bar chart (past 6 month)
+        past_6_month = []
+        label_m = []
+        for i in range(6):
+            month_date = now - timedelta(days=(30 * i))
+            label_m.append(month_date.strftime('%b'))
+        past_6_month = label_m[::-1]
+        label = past_6_month
+
+        task_types = []
+        for i in Task.TASK_CHOICES:
+            task_types.append(i[0])
+
+        task_sum = Task.objects.filter(time_trigger__gte=six_month_ago).annotate(
+            month=TruncMonth('time_trigger')).values('month', 'task_category').annotate(
+                result_pass=Count('id', filter=Q(result=True)), result_fail=Count('id', filter=Q(result=False))).order_by('month', 'task_category')
+        for i in task_sum:
+            i['month'] = i['month'].strftime('%b')
+
+        dataset = {}
+        for i in task_types:
+            dataset[i] = {
+                'pass': [0] * 6,
+                'fail': [0] * 6,
+            }
+        for i in task_sum:
+            dataset[i['task_category']]['pass'][past_6_month.index(i['month'])] += i['result_pass']
+            dataset[i['task_category']]['fail'][past_6_month.index(i['month'])] += i['result_fail']
+
+        # count task_cat 'full' in 'install' and 'test' and remove task_cat 'full' (install and test)
+        for key in dataset['f']:
+            dataset['i'][key] = [data_i + data_f for data_i, data_f in zip(dataset['i'][key], dataset['f'][key])]
+            dataset['t'][key] = [data_i + data_f for data_i, data_f in zip(dataset['t'][key], dataset['f'][key])]
+
+    elif chart_type == 'task_statistics_this_week':
+        pass
+
+    elif chart_type == 'platform':
+        pass
+
+
     else:
         sample_added_this_month = Sample.objects.filter(time_created__gte=first_day_of_month)
         sample_count_this_month = sample_added_this_month.count()

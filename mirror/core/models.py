@@ -132,9 +132,9 @@ class Task(models.Model):
     Class definition of Task
     """
     TASK_CHOICES = [
-        ('Install', 'OS installation'),
-        ('Test', 'Test Case Running'),
-        ('Full', 'OS installation and Test Case Running'),
+        ('i', 'OS installation'),
+        ('t', 'Test Case Running'),
+        ('f', 'OS installation and Test Case Running'),
     ]
     STATUS_CHOICES = [
         ('pending', 'Pending'),
