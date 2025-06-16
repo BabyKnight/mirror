@@ -3,18 +3,18 @@
 {% block content %}
 
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    {% for i in "1234" %}
+    {% for item in trends %}
         <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-2xl font-bold">{{ samples.total }}</h2>
-            <p class="text-gray-500">Total Samples</p>
+            <h2 class="text-2xl font-bold">{{ item.data }}</h2>
+	    <p class="text-gray-500">{{ item.title }}</p>
             <span class="text-green-500 text-sm">
-                {% if samples.changes > 0 %}
+                {% if item.delta > 0 %}
                     +
                 {% endif %}
-                {% if samples.changes == 0 %}
+                {% if item.delta == 0 %}
                     0
                 {% else %}
-                    {{ samples.changes|floatformat:2 }}%
+                    {{ item.delta|floatformat:2 }}%
                 {% endif %}
             </span>
         </div>
