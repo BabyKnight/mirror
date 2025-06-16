@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Linux Team Automatic Test Lab</title>
+  <link href="{% static '/core/css/tailwind.min.css' %}" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-700">
+  <script src="{% static 'core/js/chart.js' %}"></script>
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gray-800 text-white p-6 space-y-8">
+      <div class="text-2xl font-bold mb-6">Linux <span>Test Lab</span></div>
+      <nav class="space-y-8">
+        <a href="#" class="block py-2 px-4 bg-gray-700 rounded nav-link" data-url='/index/dashboard/'>Dashboard</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded nav-link" data-url='/index/sample/'>Samples</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded nav-link" data-url='/index/task/'>Tasks</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded nav-link" data-url='/index/image/'>Images</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded nav-link" data-url='/index/testcase/'>Test Cases</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded text-gray-500 nav-link" data-url='/index/platform/'>Platforms</a>
+      </nav>
+    </aside>
+
+    <div class="flex-1 p-6 space-y-6">
+        <!-- Top Bar (always keep in the top of the right panel)-->
+        <div class="w-full flex items-center justify-between bg-white p-4 shadow">
+            <!-- Search box in the center -->
+            <div class="flex-1 flex justify-center">
+                <input type="text" placeholder="Search..." class="w-full max-w-md px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <!-- User Avatar  (register/login) -->
+            <div class="ml-4">
+                <img src="https://i.pravatar.cc/40" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-gray-300">
+            </div>
+        </div>
+
+        <!-- Right panel for Main Content -->
+        <main class="flex-1 p-6 space-y-6" id="main-content">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div> <!--End of div for right main content panel  -->
+
+    {% block extra_js %}
+    {% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const links = document.querySelectorAll('.nav-link');
+            const contentDiv = document.getElementById('main-content');
+
+            links.forEach(link => {
+                link.addEventListener('click', function(event){
+                    event.preventDefault();
+                    const url = this.getAttribute('data-url');
+
+                    fetch(url)
+                        .then(response =>{
+                            if (!response.ok){
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        })
+                        .then(html => {
+                            contentDiv.innerHTML = html;
+                        })
+                        .catch(error => {
+                            contentDiv.innerHTML = "<p class='text-red-500'>Error loading content. </p>";
+                        });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,467 +1,282 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linux Team Automatic Test Lab</title>
-  <link href="{% static '/core/css/tailwind.min.css' %}" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-    }
-  </style>
-</head>
-<body class="bg-gray-100 text-gray-700">
-  <div class="flex min-h-screen">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-gray-800 text-white p-6 space-y-8">
-      <div class="text-2xl font-bold mb-6">Linux <span>Test Lab</span></div>
-      <nav class="space-y-8">
-        <a href="#" class="block py-2 px-4 bg-gray-700 rounded">Dashboard</a>
-        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Samples</a>
-        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Tasks</a>
-        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Images</a>
-        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded">Test Cases</a>
-        <a href="#" class="block py-2 px-4 hover:bg-gray-700 rounded text-gray-500">Platforms</a>
-      </nav>
-    </aside>
+{% extends "base.html" %}
 
-    <!-- Right panel for Main Content -->
-    <main class="flex-1 p-6 space-y-6">
-      
-        <!-- Top Bar -->
-        <div class="w-full flex items-center justify-between bg-white p-4 shadow">
-            <!-- Search box in the center -->
-            <div class="flex-1 flex justify-center">
-                <input type="text" placeholder="Search..." class="w-full max-w-md px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-            <!-- User Avatar  (register/login) -->
-            <div class="ml-4">
-                <img src="https://i.pravatar.cc/40" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-gray-300">
-            </div>
+{% block content %}
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    {% for i in "1234" %}
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold">{{ samples.total }}</h2>
+            <p class="text-gray-500">Total Samples</p>
+            <span class="text-green-500 text-sm">
+                {% if samples.changes > 0 %}
+                    +
+                {% endif %}
+                {% if samples.changes == 0 %}
+                    0
+                {% else %}
+                    {{ samples.changes|floatformat:2 }}%
+                {% endif %}
+            </span>
         </div>
+    {% endfor %}
+</div>
 
-        <!-- Main content -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            {% for i in "1234" %}
-                <div class="bg-white rounded-lg shadow-md p-6">
-                    <h2 class="text-2xl font-bold">{{ samples.total }}</h2>
-                    <p class="text-gray-500">Total Samples</p>
-                    <span class="text-green-500 text-sm">
-                        {% if samples.changes > 0 %}
-                            +
-                        {% endif %}
-                        {% if samples.changes == 0 %}
-                            0
-                        {% else %}
-                            {{ samples.changes|floatformat:2 }}%
-                        {% endif %}
-                    </span>
+<!-- Charts -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white rounded-lg shadow-md p-6 col-span-1">
+        <h2 class="text-xl font-semibold mb-4">Platform Status</h2>
+        <canvas id="platformStatusChart" class="w-full h-48"></canvas>
+        <ul class="mt-4 space-y-2 text-sm text-gray-500">
+            <li><span class="text-green-500 font-bold">•</span> RTSed</li>
+            <li><span class="text-blue-500 font-bold">•</span> Development Phase</li>
+        </ul>
+    </div>
+
+    <div class="relative bg-white rounded-lg shadow-md p-6 col-span-1">
+        <h2 class="text-xl font-semibold mb-4">Image Released</h2>
+        <canvas id="imageCatChart" class="w-full h-48"></canvas>
+        <ul class="absolute bottom-4 space-y-2 text-sm text-gray-500">
+            <li><span class="text-blue-500 font-bold">•</span> - Edge Image</li>
+            <li><span class="text-red-500 font-bold">•</span> - Next Images</li>
+            <li><span class="text-green-500 font-bold">•</span> - Proposed Images</li>
+            <li><span class="text-purple-500 font-bold">•</span> - Production Images</li>
+        </ul>
+    </div>
+
+    <div class="relative bg-white rounded-lg shadow-md p-6 col-span-1">
+        <h2 class="text-xl font-semibold mb-4">Task Summary</h2>
+        <canvas id="taskSummaryChart" class="w-full h-48"></canvas>
+        <ul class="absolute bottom-4 space-y-2 text-sm text-gray-500">
+            <li><span class="text-blue-500 font-bold">•</span> Count > 0 indicates task passed</li>
+            <li><span class="text-red-500 font-bold">•</span> Count < 0 indicates task failed</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-white rounded-lg shadow-md p-6 col-span-2">
+        <h2 class="text-xl font-semibold mb-4">Sample Statistics</h2>
+        <canvas id="sampleChart" class="w-full h-48"></canvas>
+        <p class="text-gray-500 text-sm mt-4">Available Samples for this Week</p>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
+        <ul class="space-y-4">
+            {% for item in activity_list %}
+            <li class="flex items-start">
+                <div class="text-blue-500 w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">
+                    🛒
                 </div>
+                <div class="ml-4">
+                    <p class="font-semibold">{{ item.user }}</p>
+                    <p class="text-sm text-gray-500">{{ item.detail }}<span class="text-xs">&nbsp;{{ item.time }}</span></p>
+                </div>
+            </li>
             {% endfor %}
-        </div>
+        </ul>
+        <button class="text-blue-500 text-sm mt-4">Load More</button>
+    </div>
+</div>
 
-        <!-- Charts -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div class="bg-white rounded-lg shadow-md p-6 col-span-1">
-                <h2 class="text-xl font-semibold mb-4">Platform Status</h2>
-                <canvas id="platformStatusChart" class="w-full h-48"></canvas>
-                <ul class="mt-4 space-y-2 text-sm text-gray-500">
-                    <li><span class="text-green-500 font-bold">•</span> RTSed</li>
-                    <li><span class="text-blue-500 font-bold">•</span> Development Phase</li>
-                </ul>
-            </div>
+<!-- Top Tasks -->
+<div class="bg-white rounded-lg shadow-md p-6 mt-6">
+    <h2 class="text-xl font-semibold mb-4">Top Tasks</h2>
+    <table class="table-auto w-full text-left">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">SKU/Platform</th>
+                <th class="px-4 py-2">Task Type</th>
+                <th class="px-4 py-2">Image/Kernel</th>
+                <th class="px-4 py-2">Status</th>
+                <th class="px-4 py-2">Trigger</th>
 
-            <div class="relative bg-white rounded-lg shadow-md p-6 col-span-1">
-                <h2 class="text-xl font-semibold mb-4">Image Released</h2>
-                <canvas id="imageReleaseChart" class="w-full h-48"></canvas>
-                <ul class="absolute bottom-4 space-y-2 text-sm text-gray-500">
-                    <li><span class="text-blue-500 font-bold">•</span> - Edge Image</li>
-                    <li><span class="text-red-500 font-bold">•</span> - Next Images</li>
-                    <li><span class="text-green-500 font-bold">•</span> - Proposed Images</li>
-                    <li><span class="text-purple-500 font-bold">•</span> - Production Images</li>
-                </ul>
-            </div>
-
-            <div class="relative bg-white rounded-lg shadow-md p-6 col-span-1">
-                <h2 class="text-xl font-semibold mb-4">Task Summary</h2>
-                <canvas id="taskSummaryChart" class="w-full h-48"></canvas>
-                <ul class="absolute bottom-4 space-y-2 text-sm text-gray-500">
-                    <li><span class="text-blue-500 font-bold">•</span> Count > 0 means task passed</li>
-                    <li><span class="text-red-500 font-bold">•</span> Count < 0 means task failed</li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Statistics -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-white rounded-lg shadow-md p-6 col-span-2">
-                <h2 class="text-xl font-semibold mb-4">Sample Statistics</h2>
-                <canvas id="sampleChart" class="w-full h-48"></canvas>
-                <p class="text-gray-500 text-sm mt-4">Available Samples for this Week</p>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
-                <ul class="space-y-4">
-                    {% for item in activity_list %}
-                    <li class="flex items-start">
-                        <div class="text-blue-500 w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">
-                            🛒
-                        </div>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in task_list %}
+                <tr class="bg-gray-50">
+                <td class="border px-4 py-2">#{{ item.id }}</td>
+                <td class="border px-4 py-2">
+                    <div class="flex items-center">
                         <div class="ml-4">
-                            <p class="font-semibold">{{ item.user }}</p>
-                            <p class="text-sm text-gray-500">{{ item.detail }}<span class="text-xs">&nbsp;{{ item.time }}</span></p>
+                            <p class="font-semibold">{{ item.sku }}</p>
+                            <p class="text-sm text-gray-500">{{ item.platform_name }}</p>
                         </div>
-                    </li>
-                    {% endfor %}
-                </ul>
-                <button class="text-blue-500 text-sm mt-4">Load More</button>
-            </div>
-        </div>
-
-        <!-- Top Tasks -->
-        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-            <h2 class="text-xl font-semibold mb-4">Top Tasks</h2>
-            <table class="table-auto w-full text-left">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2">ID</th>
-                        <th class="px-4 py-2">SKU/Platform</th>
-                        <th class="px-4 py-2">Task Type</th>
-                        <th class="px-4 py-2">Image/Kernel</th>
-                        <th class="px-4 py-2">Status</th>
-                        <th class="px-4 py-2">Trigger</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in task_list %}
-                        <tr class="bg-gray-50">
-                        <td class="border px-4 py-2">#{{ item.id }}</td>
-                        <td class="border px-4 py-2">
-                            <div class="flex items-center">
-                                <div class="ml-4">
-                                    <p class="font-semibold">{{ item.sku }}</p>
-                                    <p class="text-sm text-gray-500">{{ item.platform_name }}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="border px-4 py-2">
-                            <div class="flex space-x-2">
-                                {% if item.type == "I" %}
-                                    <span class="bg-blue-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">I</span>
-                                {% elif item.type == "T" %}
-                                    <span class="bg-purple-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">T</span>
-                                {% elif item.type == "F" %}
-                                    <span class="bg-green-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">F</span>
-                                {% endif %}
-                                <span class="bg-gray-300 w-6 h-6 text-gray-700 text-sm flex items-center justify-center rounded-full">+</span>
-                            </div>
-                        </td>
-                        <td class="border px-4 py-2">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">{{ item.image_cat }}</span>
-                            <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">{{ item.kernel_ver }}</span>
-                        </td>
-                        <td class="border px-4 py-2">
-                            {% if item.st == 'p' %}
-                                <span class="w-4 h-4 bg-yellow-500 block rounded-full"></span>
-                            {% elif item.st == 'r' %}
-                                <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
-                            {% elif item.st == 'c' %}
-                                <span class="w-4 h-4 bg-green-500 block rounded-full"></span>
-                            {% elif item.st == 'u' %}
-                                <span class="w-4 h-4 bg-gray-200 block rounded-full"></span>
-                            {% endif %}
-                        </td>
-                        <td class="border px-4 py-2">
-                            <div class="flex items-center">
-                                <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full">
-                                <div class="ml-4">
-                                    <p class="font-semibold">{{ item.trigger_by }}</p>
-                                    <p class="text-sm text-gray-500">{{ item.trigger_at }}</p>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-
-        <!-- Samples -->
-        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-            <h2 class="text-xl font-semibold mb-4">Samples</h2>
-            <table class="table-auto w-full text-left">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2">No.</th>
-                        <th class="px-4 py-2">Platform</th>
-                        <th class="px-4 py-2">SKU</th>
-                        <th class="px-4 py-2">SSID</th>
-                        <th class="px-4 py-2">Service Tag</th>
-                        <th class="px-4 py-2">IP Address</th>
-                        <th class="px-4 py-2">Owner</th>
-                        <th class="px-4 py-2">Current User</th>
-                        <th class="px-4 py-2">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in sample_list %}
-                        <tr class="bg-gray-50">
-                            <td class="border px-4 py-2">#{{ item.id}}</td>
-                            <td class="border px-4 py-2">{{ item.platform }}</td>
-                            <td class="border px-4 py-2">{{ item.sku }}</td>
-                            <td class="border px-4 py-2">
-                                <span class="bg-gray-200 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-900 dark:text-gray-300">
-                                    0x{{ item.ssid }}
-                                </span>
-                            </td>
-                            <td class="border px-4 py-2">{{ item.service_tag }}</td>
-                            <td class="border px-4 py-2">{{ item.ip }}</td>
-                            <td class="border px-4 py-2">{{ item.owner }}</td>
-                            <td class="border px-4 py-2">{{ item.current_user }}</td>
-                            <td class="border px-4 py-2">
-                                {% if item.st == '0' %}
-                                    <span class="w-4 h-4 bg-gray-300 block rounded-full"></span>
-                                {% elif item.st == '1' %}
-                                    <span class="w-4 h-4 bg-green-300 block rounded-full"></span>
-                                {% else %}
-                                    <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-
-<!-- Images -->
-        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-            <h2 class="text-xl font-semibold mb-4">Images</h2>
-            <table class="table-auto w-full text-left">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2">No.</th>
-                        <th class="px-4 py-2">Image Name</th>
-                        <th class="px-4 py-2">Category</th>
-                        <th class="px-4 py-2">Version</th>
-                        <th class="px-4 py-2">Kernel Version</th>
-                        <th class="px-4 py-2">Release Date</th>
-                        <th class="px-4 py-2">File Size</th>
-                        <th class="px-4 py-2">SHA256</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in image_list %}
-                    	<tr class="bg-gray-50">
-                            <td class="border px-4 py-2">#{{ item.id }}</td>
-                            <td class="border px-4 py-2">{{ item.image_name }}</td>
-			    <td class="border px-4 py-2">
-				{% if item.category == "edge" %}
-				    <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-red-900 dark:text-red-300">
-				{% elif item.category == "next" %}
-				    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-yellow-900 dark:text-yellow-300">
-				{% elif item.category == "proposed" %}
-				    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">
-				{% elif item.category == "production" %}
-				    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-green-900 dark:text-green-300">
-				{% endif %}
-				{{ item.category }}</span>
-			    </td>
-			    <td class="border px-4 py-2">
-                    <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">
-				    {{ item.image_version }}
-				    </span>
-			    </td>
-			    <td class="border px-4 py-2">
-				    <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-900 dark:text-gray-300">
-				        {{ item.kernel_main_version }}
-				    </span>
-                    <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">
-				        {{ item.kernel_build_version }}
-				    </span>
-			    </td>
-			    <td class="border px-4 py-2">{{ item.release_date }}</td>
-			    <td class="border px-4 py-2">{{ item.file_size }}G</td>
-			    <td class="border px-4 py-2">
-                    <span class="bg-gray-200 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-900 dark:text-gray-300">
-                        {{ item.sha256_hash }}
-                    </span>
+                    </div>
                 </td>
-                </tr>
-		    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                <td class="border px-4 py-2">
+                    <div class="flex space-x-2">
+                        {% if item.type == "I" %}
+                            <span class="bg-blue-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">I</span>
+                        {% elif item.type == "T" %}
+                            <span class="bg-purple-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">T</span>
+                        {% elif item.type == "F" %}
+                            <span class="bg-green-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">F</span>
+                        {% endif %}
+                        <span class="bg-gray-300 w-6 h-6 text-gray-700 text-sm flex items-center justify-center rounded-full">+</span>
+                    </div>
+                </td>
+                <td class="border px-4 py-2">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">{{ item.image_cat }}</span>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">{{ item.kernel_ver }}</span>
+                </td>
+                <td class="border px-4 py-2">
+                    {% if item.st == 'p' %}
+                        <span class="w-4 h-4 bg-yellow-500 block rounded-full"></span>
+                    {% elif item.st == 'r' %}
+                        <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
+                    {% elif item.st == 'c' %}
+                        <span class="w-4 h-4 bg-green-500 block rounded-full"></span>
+                    {% elif item.st == 'u' %}
+                        <span class="w-4 h-4 bg-gray-200 block rounded-full"></span>
+                    {% endif %}
+                </td>
+                <td class="border px-4 py-2">
+                    <div class="flex items-center">
+                        <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full">
+                        <div class="ml-4">
+                            <p class="font-semibold">{{ item.trigger_by }}</p>
+                            <p class="text-sm text-gray-500">{{ item.trigger_at }}</p>
+                        </div>
+                    </div>
+                </td>
+            </tr>
 
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-<!-- Test Cases -->
-        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-            <h2 class="text-xl font-semibold mb-4">Test Cases</h2>
-            <table class="table-auto w-full text-left">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2">No.</th>
-                        <th class="px-4 py-2">Case No.</th>
-                        <th class="px-4 py-2">Name</th>
-                        <th class="px-4 py-2">Description</th>
-                        <th class="px-4 py-2">Steps</th>
-                        <th class="px-4 py-2">version</th>
-                    </tr>
-                </thead>
-                <tbody> 
-                    {% for item in testcase_list %}
-                    	<tr class="bg-gray-50">
-			    <td class="border px-4 py-2">#{{ item.id }}</td>
-			    <td class="border px-4 py-2">{{ item.number }}</td>
-			    <td class="border px-4 py-2">{{ item.case_name }}</td>
-			    <td class="border px-4 py-2">{{ item.description }}</td>
-			    <td class="border px-4 py-2">{{ item.steps }}</td>
-			    <td class="border px-4 py-2">
-				<span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">{{ item.version }}</span>
-			    </td>
-                        </tr>
-		    {% endfor%}
-                </tbody>
-            </table>
-        </div>
+{% endblock %}
 
-
-    </div> <!--End of div for right main content panel  -->
-
-
-    <script src="{% static 'core/js/chart.js' %}"></script>
-    <script>
-        const sampleCtx = document.getElementById('sampleChart').getContext('2d');
-        new Chart(sampleCtx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Earnings',
-                    data: [12, 15, 19, 28, 24, 18, 35],
-                    borderColor: '#6366F1',
-                    backgroundColor: 'rgba(99, 102, 241, 0.2)',
-                    tension: 0.4
-                }]
+{% block extra_js%}
+<script>
+    const sampleCtx = document.getElementById('sampleChart').getContext('2d');
+    new Chart(sampleCtx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Earnings',
+                data: [12, 15, 19, 28, 24, 18, 35],
+                borderColor: '#6366F1',
+                backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    x: { grid: { display: false } },
-                    y: { grid: { color: '#f1f5f9' }, beginAtZero: true }
-                }
+            scales: {
+                x: { grid: { display: false } },
+                y: { grid: { color: '#f1f5f9' }, beginAtZero: true }
             }
-        });
+        }
+    });
 
-        const platStCtx = document.getElementById('platformStatusChart').getContext('2d');
-        new Chart(platStCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Development Phase', 'RTSed'],
-                datasets: [{
-                    data: [11, 25],
-                    backgroundColor: ['#6366F1', '#34D399']
-                }]
+    const platStCtx = document.getElementById('platformStatusChart').getContext('2d');
+    new Chart(platStCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Development Phase', 'RTSed'],
+            datasets: [{
+                data: [11, 25],
+                backgroundColor: ['#6366F1', '#34D399']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    const imgReleaseCtx = document.getElementById('imageCatChart').getContext('2d');
+    new Chart(imgReleaseCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Edge',
+                data: [4, 1, 2, 0, 1, 2],
+                backgroundColor: '#6366F1'
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
-
-        const imgReleaseCtx = document.getElementById('imageReleaseChart').getContext('2d');
-        new Chart(imgReleaseCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                    label: 'Edge',
-                    data: [4, 1, 2, 0, 1, 2],
-                    backgroundColor: '#6366F1'
-                },
-                {
-                    label: 'Next',
-                    data: [0, 2, 0, 3, 6, 1],
-                    backgroundColor: '#F87171'
-                },
             {
-                    label: 'Proposed',
-                    data: [5, 3, 7, 8, 6, 10],
-                    backgroundColor: '#34D399'
-                },
+                label: 'Next',
+                data: [0, 2, 0, 3, 6, 1],
+                backgroundColor: '#F87171'
+            },
             {
-                    label: 'Production',
-                    data: [0, 0, 1, 2, 2, 1],
-                    backgroundColor: '#8B5CF6'
-                }]
+                label: 'Proposed',
+                data: [5, 3, 7, 8, 6, 10],
+                backgroundColor: '#34D399'
             },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    x: { grid: { display: false } },
-                    y: { grid: { color: '#f1f5f9' }, beginAtZero: true }
-                }
+            {
+                label: 'Production',
+                data: [0, 0, 1, 2, 2, 1],
+                backgroundColor: '#8B5CF6'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: { grid: { color: '#f1f5f9' }, beginAtZero: true }
             }
-        });
+        }
+    });
 
 
-        const taskSumCtx = document.getElementById('taskSummaryChart').getContext('2d');
-        new Chart(taskSumCtx, {
-            type: 'bar',
-            data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-                datasets: [
-                {
-                    label: 'Installation Passed',
-                    data: [11, 25, 16, 21, 40, 37],
-                    backgroundColor: ['#F87171']
-                },
-                {
-                    label: 'Checkbox Passed',
-                    data: [20, 15, 27, 15, 32, 28],
-                    backgroundColor: ['#60A5FA']
-                },
-                {
-                    label: 'Installation Failed',
-                    data: [-2, -1, 0, 0, -7, -4],
-                    backgroundColor: ['#F87171']
-                },
-                {
-                    label: 'Checkbox Failed',
-                    data: [-10, -6, -7, -9, -2, -7],
-                    backgroundColor: ['#60A5FA']
-                },
-                ]
+    const taskSumCtx = document.getElementById('taskSummaryChart').getContext('2d');
+    new Chart(taskSumCtx, {
+        type: 'bar',
+        data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+            datasets: [
+            {
+                label: 'Installation Passed',
+                data: [11, 25, 16, 21, 40, 37],
+                backgroundColor: ['#F87171']
             },
-            options: {
-                indexAxis: 'x',  // <-- This makes it horizontal
-                responsive: true,
-                plugins: {
-                    legend: { display: false}
-                },
-                scales: {
-                    x: {
-                        beginAtZero: true
-                    }
+            {
+                label: 'Checkbox Passed',
+                data: [20, 15, 27, 15, 32, 28],
+                backgroundColor: ['#60A5FA']
+            },
+            {
+                label: 'Installation Failed',
+                data: [-2, -1, 0, 0, -7, -4],
+                backgroundColor: ['#F87171']
+            },
+            {
+                label: 'Checkbox Failed',
+                data: [-10, -6, -7, -9, -2, -7],
+                backgroundColor: ['#60A5FA']
+            },
+            ]
+        },
+        options: {
+            indexAxis: 'x',  // <-- This makes it horizontal
+            responsive: true,
+            plugins: {
+                legend: { display: false}
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
                 }
             }
-        });
-    </script>
-</body>
-</html>
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,58 @@
+<!-- Images -->
+        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Images</h2>
+            <table class="table-auto w-full text-left">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">No.</th>
+                        <th class="px-4 py-2">Image Name</th>
+                        <th class="px-4 py-2">Category</th>
+                        <th class="px-4 py-2">Version</th>
+                        <th class="px-4 py-2">Kernel Version</th>
+                        <th class="px-4 py-2">Release Date</th>
+                        <th class="px-4 py-2">File Size</th>
+                        <th class="px-4 py-2">SHA256</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in image_list %}
+                    	<tr class="bg-gray-50">
+                            <td class="border px-4 py-2">#{{ item.id }}</td>
+                            <td class="border px-4 py-2">{{ item.image_name }}</td>
+			    <td class="border px-4 py-2">
+				{% if item.category == "edge" %}
+				    <span class="bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-red-900 dark:text-red-300">
+				{% elif item.category == "next" %}
+				    <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-yellow-900 dark:text-yellow-300">
+				{% elif item.category == "proposed" %}
+				    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">
+				{% elif item.category == "production" %}
+				    <span class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-green-900 dark:text-green-300">
+				{% endif %}
+				{{ item.category }}</span>
+			    </td>
+			    <td class="border px-4 py-2">
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">
+				    {{ item.image_version }}
+				    </span>
+			    </td>
+			    <td class="border px-4 py-2">
+				    <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-900 dark:text-gray-300">
+				        {{ item.kernel_main_version }}
+				    </span>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">
+				        {{ item.kernel_build_version }}
+				    </span>
+			    </td>
+			    <td class="border px-4 py-2">{{ item.release_date }}</td>
+			    <td class="border px-4 py-2">{{ item.file_size }}G</td>
+			    <td class="border px-4 py-2">
+                    <span class="bg-gray-200 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-900 dark:text-gray-300">
+                        {{ item.sha256_hash }}
+                    </span>
+                </td>
+                </tr>
+		    {% endfor %}
+                </tbody>
+            </table>
+        </div>

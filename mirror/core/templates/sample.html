@@ -1,0 +1,46 @@
+        <!-- Samples -->
+        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-xl font-semibold mb-4">Samples</h2>
+            <table class="table-auto w-full text-left">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2">No.</th>
+                        <th class="px-4 py-2">Platform</th>
+                        <th class="px-4 py-2">SKU</th>
+                        <th class="px-4 py-2">SSID</th>
+                        <th class="px-4 py-2">Service Tag</th>
+                        <th class="px-4 py-2">IP Address</th>
+                        <th class="px-4 py-2">Owner</th>
+                        <th class="px-4 py-2">Current User</th>
+                        <th class="px-4 py-2">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in sample_list %}
+                        <tr class="bg-gray-50">
+                            <td class="border px-4 py-2">#{{ item.id}}</td>
+                            <td class="border px-4 py-2">{{ item.platform }}</td>
+                            <td class="border px-4 py-2">{{ item.sku }}</td>
+                            <td class="border px-4 py-2">
+                                <span class="bg-gray-200 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-900 dark:text-gray-300">
+                                    0x{{ item.ssid }}
+                                </span>
+                            </td>
+                            <td class="border px-4 py-2">{{ item.service_tag }}</td>
+                            <td class="border px-4 py-2">{{ item.ip }}</td>
+                            <td class="border px-4 py-2">{{ item.owner }}</td>
+                            <td class="border px-4 py-2">{{ item.current_user }}</td>
+                            <td class="border px-4 py-2">
+                                {% if item.st == '0' %}
+                                    <span class="w-4 h-4 bg-gray-300 block rounded-full"></span>
+                                {% elif item.st == '1' %}
+                                    <span class="w-4 h-4 bg-green-300 block rounded-full"></span>
+                                {% else %}
+                                    <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>

@@ -4,8 +4,18 @@ from .views import *
 urlpatterns = [
     # to be updated to direct to the home page as default
     path('', dummy_view),
+    
+    path('index/', index),
+    path('index/dashboard/', dashboard),
+    path('index/sample/', sample),
+    path('index/image/', image),
+    path('index/task/', task),
+    path('index/testcase/', testcase),
+    path('index/platform/', platform),
+    path('chart/<str:chart_type>/', chart),
+
+    #API
     re_path(r'^api/ping/?$', ping),
-    re_path(r'^dashboard/?$', dashboard),
     # api for User & User Profile
     re_path(r'^api/user/create/?$', dummy_view),
     re_path(r'^api/user/update/?$', dummy_view),

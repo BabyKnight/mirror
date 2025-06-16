@@ -85,6 +85,7 @@ class Sample(models.Model):
     status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True, related_name='samples') 
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='owned_samples')
     current_user = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='sample_in_use')
+    time_created = models.DateTimeField(default=timezone.now)
     last_update = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
