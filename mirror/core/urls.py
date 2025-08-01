@@ -29,14 +29,18 @@ urlpatterns = [
     re_path(r'^api/sample/delete/?$', dummy_view),
     re_path(r'^api/sample/update/?$', dummy_view),
     re_path(r'^api/sample/detail/?$', dummy_view),
+    re_path(r'^api/sample/show_all/?$', dummy_view),
     #Status /* Pre-defined status and code */
     # api for Task
     re_path(r'^api/task/run/?$', dummy_view),
     re_path(r'^api/task/cancel/?$', dummy_view),
     re_path(r'^api/task/detail/?$', dummy_view),
+    # api for log
+    re_path(r'^api/log_upload/?$', log_upload),
     # api for Test case
     re_path(r'^api/case/add/?$', dummy_view),
     re_path(r'^api/case/delete/?$', dummy_view),
     re_path(r'^api/case/update/?$', dummy_view),
     re_path(r'^api/case/detail/?$', dummy_view),
+    re_path(r'^api/case/show_all/?$', dummy_view),
 ]

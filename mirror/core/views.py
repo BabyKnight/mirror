@@ -6,6 +6,8 @@ from .models import Sample, Image, Task, TestCase
 from datetime import datetime, timezone, timedelta
 from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth, TruncDate
+from django.views.decorators.csrf import csrf_exempt
+import os
 
 
 def ping(request):
@@ -537,3 +539,39 @@ def get_chart_data(chart_type):
     }
 
     return context
+
+
+def is_allowed_filename(filename):
+    ALLOWED_EXTENSIONS = {'gz', 'tgz', 'zip', '7z'}
+    ext = filename.rsplit('.', 1)[-1].lower()
+    return ext in ALLOWED_EXTENSIONS
+
+
+@csrf_exempt
+def log_upload(request):
+
+    #TODO to define somewhere else 
+    MAX_FILE_SIZE = 300 * 1024 * 1024
+
+
+    uploaded = request.FILES.get("file")
+    if not uploaded:
+        print('not file uploaded')
+        return JsonResponse({'detail': 'Not file uploaded'}, status=400)
+
+    if uploaded.size > MAX_FILE_SIZE:
+        return JsonResponse({'detail': 'File too large'}, status=413)
+
+    original_name = uploaded.name
+    if not is_allowed_filename(original_name):
+        return JsonResponse({'detail': 'File type not allowed'}, status=400)
+
+    #TODO need to add random string to make it save in case filename conflict
+    safe_name = original_name
+    save_path = os.path.join('/tmp', safe_name)
+
+    with open(save_path, 'wb') as f:
+        for chunk in uploaded.chunks():
+            f.write(chunk)
+
+    return JsonResponse({'detail': 'File uploaded'}, status=200)
