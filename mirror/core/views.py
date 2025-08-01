@@ -97,8 +97,15 @@ def index(request):
                 time_trigger__gte=start_of_last_month,
                 time_trigger__lt=start_of_this_month
             ).count()
-    failure_rate_last_month = total_failed_task_last_month / total_task_last_month
-    failure_rate_this_month = total_failed_task_this_month / total_task_this_month
+    if total_task_last_month == 0:
+        failure_rate_last_month = 0
+    else:
+        failure_rate_last_month = total_failed_task_last_month / total_task_last_month
+
+    if total_task_this_month == 0:
+        failure_rate_this_month = 0
+    else:
+        failure_rate_this_month = total_failed_task_this_month / total_task_this_month
     failure_rate_delta = round((failure_rate_this_month - failure_rate_last_month), 2)
     fr_trend = {
                 'title':'Task Failure Rate (this month)',
