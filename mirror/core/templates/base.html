@@ -70,12 +70,19 @@
                         })
                         .then(html => {
                             contentDiv.innerHTML = html;
+                            if(url == '/index/dashboard/'){
+                                // dynamically render the charts in dashboard
+                                renderChartsInDashboard()
+                            }
                         })
                         .catch(error => {
                             contentDiv.innerHTML = "<p class='text-red-500'>Error loading content. </p>";
                         });
                 });
             });
+
+
+
         });
     </script>
 </body>
