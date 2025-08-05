@@ -2,6 +2,7 @@
 
 from .models import Sample, Image, Task, TestCase
 from datetime import datetime, timezone, timedelta
+from django.core import serializers
 from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth, TruncDate
 
@@ -118,3 +119,14 @@ def get_chart_data(chart_type):
     }
 
     return context
+
+def get_sample_data():
+    """
+    method to get sample data
+    """
+    sample_data = Sample.objects.all()
+    return serializers.serialize('json', sample_data)
+
+
+def get_task_data():
+    pass

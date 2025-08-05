@@ -1,7 +1,8 @@
 import os
+import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .utils import get_chart_data
+from .utils import get_chart_data, get_sample_data
 
 SKIP_LOG_EXTEN_CHECK = True
 SKIP_LOG_SIZE_CHECK = True
@@ -60,3 +61,26 @@ def charts_data(request, chart_type):
         - task_st_this_week
     """
     return JsonResponse(get_chart_data(chart_type))
+
+def search(request, category=None):
+    """
+    api for search,
+    category: [optional]
+    Available category:
+        - image
+        - sample
+        - task
+
+    """
+    # if category available, then direct to the pre-defined search criteria
+    if category:
+        if category == 'sample':
+            return JsonResponse(get_sample_data())
+        if category == 'task':
+            return JsonResponse(get_task_data())
+
+    # reserved other implimentation
+    else:
+        q = request.GET.get("q", "")
+
+    return JsonResponse({})

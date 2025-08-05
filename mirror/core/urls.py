@@ -18,11 +18,12 @@ urlpatterns = [
     # API
     re_path(r'^api/ping/?$', ping),
     # api for charts
-    #path('charts_data/<str:chart_type>/', charts_data),
     re_path(r'^api/charts_data/(?P<chart_type>[^/]+)/?$', charts_data),
 
     # api for log
     re_path(r'^api/log_upload/?$', log_upload),
+    re_path(r'^api(?:/(?P<category>[^/]+))?/search$', search),
+
 
 
     # api for User & User Profile
