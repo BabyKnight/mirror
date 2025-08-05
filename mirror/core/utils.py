@@ -110,12 +110,7 @@ def get_chart_data(chart_type):
 
 
     else:
-        sample_added_this_month = Sample.objects.filter(time_created__gte=first_day_of_month)
-        sample_count_this_month = sample_added_this_month.count()
-
-
-        tsk_this_week = Task.objects.filter(time_trigger__gte=start_of_week)
-        tsk_count_this_week = tsk_this_week.count()
+        return {'msg': 'charts type error'}
 
     context = {
         "label": label,

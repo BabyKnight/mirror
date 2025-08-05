@@ -15,10 +15,14 @@ urlpatterns = [
     path('index/platform/', platform),
     
 
-    #API
+    # API
     re_path(r'^api/ping/?$', ping),
     # api for charts
-    path('charts_data/<str:chart_type>/', charts_data),
+    #path('charts_data/<str:chart_type>/', charts_data),
+    re_path(r'^api/charts_data/(?P<chart_type>[^/]+)/?$', charts_data),
+
+    # api for log
+    re_path(r'^api/log_upload/?$', log_upload),
 
 
     # api for User & User Profile
@@ -41,8 +45,7 @@ urlpatterns = [
     re_path(r'^api/task/cancel/?$', dummy_view),
     re_path(r'^api/task/detail/?$', dummy_view),
     re_path(r'^api/task/status_update/?$', dummy_view),
-    # api for log
-    re_path(r'^api/log_upload/?$', log_upload),
+
     # api for Test case
     re_path(r'^api/case/add/?$', dummy_view),
     re_path(r'^api/case/delete/?$', dummy_view),

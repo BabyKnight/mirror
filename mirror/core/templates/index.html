@@ -177,7 +177,7 @@
         let taskCountChart;
     
         function renderTaskCountChart(){
-            fetch("/charts_data/task_st_this_week")
+            fetch("/api/charts_data/task_st_this_week")
             .then(response =>{
                 if (!response.ok){
                     throw new Error('Charts data error')
@@ -228,7 +228,7 @@
         const imgReleaseCtx = document.getElementById('imageCatChart').getContext('2d');
         let imageReleaseChart;
         function renderImageReleasedChart(){
-            fetch("/charts_data/image")
+            fetch("/api/charts_data/image")
             .then(response =>{
                 if (!response.ok){
                     throw new Error('Charts data error')
@@ -292,7 +292,7 @@
         const taskSumCtx = document.getElementById('taskSummaryChart').getContext('2d');
         let taskSumChart;
         function renderTaskSummaryChart(){
-            fetch("/charts_data/task_result_sum")
+            fetch("/api/charts_data/task_result_sum")
             .then(response =>{
                 if (!response.ok){
                     throw new Error('Charts data error')
