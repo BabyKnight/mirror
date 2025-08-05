@@ -22,7 +22,7 @@ urlpatterns = [
 
     # api for log
     re_path(r'^api/log_upload/?$', log_upload),
-    re_path(r'^api(?:/(?P<category>[^/]+))?/search$', search),
+    re_path(r'^api/search$', search),
 
 
 

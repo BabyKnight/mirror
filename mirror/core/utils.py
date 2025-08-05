@@ -120,13 +120,26 @@ def get_chart_data(chart_type):
 
     return context
 
-def get_sample_data():
-    """
-    method to get sample data
-    """
-    sample_data = Sample.objects.all()
-    return serializers.serialize('json', sample_data)
 
-
-def get_task_data():
-    pass
+def get_task_data(c=None):
+    """
+    method to get task
+    """
+    # if no criteria provided, keep default to query all
+    if c is None:
+        task_data = Task.objects.filter(status='pending')
+        res = []
+        for i in task_data:
+            res.append({
+                'task_id': i.pk,
+                'task_cate': i.task_category,
+                'image_id': i.image.pk,
+                'image_name': i.image.image_name,
+                'image_filepath': i.image.file_path,
+                'sample_id': i.sample.pk,
+                'sample_ip': i.sample.ip,
+                })
+        return res
+    else:
+        # to be implimented
+        return {}
