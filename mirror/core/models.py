@@ -88,6 +88,9 @@ class Sample(models.Model):
     time_created = models.DateTimeField(default=timezone.now)
     last_update = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        unique_together = ('service_tag', 'ssid')
+
     def __str__(self):
         return "<{}: {} ({})>".format(
             self.platform,
