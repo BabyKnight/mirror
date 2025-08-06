@@ -1,6 +1,6 @@
 #utils.py defines common method or utilities
 
-from .models import Sample, Image, Task, TestCase
+from .models import Sample, Image, Task, TestCase, Status
 from datetime import datetime, timezone, timedelta
 from django.core import serializers
 from django.db.models import Count, Q
@@ -188,3 +188,23 @@ def get_sample_data(sample_id=None, ssid=None, st=None):
                 'status': i.status.description,
                 })
     return res
+
+
+def update_sample_status(ssid, st, stat):
+    """
+    Method to update the sample status
+    """
+
+    slp = Sample.objects.get(service_tag=st, ssid=ssid)
+    if not slp:
+        return -1
+    slp.status = Status.objects.get(code=stat)
+    slp.save()
+    return 0
+
+
+def update_task_status(ssid, st, stat):
+    """
+    Method to update the task status
+    """
+    pass

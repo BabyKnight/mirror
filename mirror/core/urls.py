@@ -17,13 +17,11 @@ urlpatterns = [
 
     # API
     re_path(r'^api/ping/?$', ping),
-    # api for charts
     re_path(r'^api/charts_data/(?P<chart_type>[^/]+)/?$', charts_data),
-
-    # api for log
     re_path(r'^api/log_upload/?$', log_upload),
-    # api for search
     re_path(r'^api/search$', search),
+    re_path(r'^api/update_status/(?P<item>[^/]+)?$', update_status),
+
 
     # api for User & User Profile
     re_path(r'^api/user/create/?$', dummy_view),

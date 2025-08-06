@@ -1,8 +1,8 @@
 import os
 import json
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .utils import get_chart_data, get_task_data, get_sample_data
+from .utils import get_chart_data, get_task_data, get_sample_data, update_sample_status, update_task_status
 
 SKIP_LOG_EXTEN_CHECK = True
 SKIP_LOG_SIZE_CHECK = True
@@ -20,7 +20,7 @@ def ping(request):
         client_ip = x_forward_for.split(',')[0].strip()
     else:
         client_ip = request.META.get('REMOTE_ADDR')
-    return JsonResponse({'detail': 'Hello'}, status=200)
+    return HttpResponse('OK', status=200)
 
 
 @csrf_exempt
@@ -62,11 +62,12 @@ def charts_data(request, chart_type):
     """
     return JsonResponse(get_chart_data(chart_type))
 
+
 def search(request):
     """
     api for search,
     q: query item - [must]
-    c: criteria - [optional]
+    c, ssid, st, id: criteria - [optional]
     """
     q = request.GET.get("q", None)
     if q is None:
@@ -83,3 +84,24 @@ def search(request):
         return JsonResponse({})
 
     return JsonResponse({'data': res})
+
+
+def update_status(request, item=None):
+    """
+    api for update status
+    Valid item: spl(sample), tsk(task)
+    """
+    stat = request.GET.get("stat", None)
+    if stat is None:
+        return HttpResponse(-1, status=200)
+
+    if item == 'tsk':
+        ssid = request.GET.get("ssid", None)
+        st = request.GET.get("st", None)
+    elif item == 'spl':
+        ssid = request.GET.get("ssid", None)
+        st = request.GET.get("st", None)
+        res = update_sample_status(ssid, st, stat)
+    else:
+        res = -1
+    return HttpResponse(res)
