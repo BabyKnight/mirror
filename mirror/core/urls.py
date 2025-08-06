@@ -22,9 +22,8 @@ urlpatterns = [
 
     # api for log
     re_path(r'^api/log_upload/?$', log_upload),
+    # api for search
     re_path(r'^api/search$', search),
-
-
 
     # api for User & User Profile
     re_path(r'^api/user/create/?$', dummy_view),

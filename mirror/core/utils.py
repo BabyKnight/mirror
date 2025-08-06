@@ -127,7 +127,7 @@ def get_task_data(c=None):
     """
     # if no criteria provided, keep default to query all
     if c is None:
-        task_data = Task.objects.filter(status='pending')
+        task_data = Task.objects.filter(status='pending').order_by('pk')
         res = []
         for i in task_data:
             res.append({
@@ -138,8 +138,53 @@ def get_task_data(c=None):
                 'image_filepath': i.image.file_path,
                 'sample_id': i.sample.pk,
                 'sample_ip': i.sample.ip,
+                'sample_status_code': i.sample.status.code,
+                'sample_status': i.sample.status.description,
                 })
         return res
     else:
         # to be implimented
-        return {}
+        return []
+
+def get_sample_data(sample_id=None, ssid=None, st=None):
+    """
+    Method to get sample data by sample id or service tag + bios id
+    """
+    if sample_id is not None:
+        sample_data = Sample.objects.get(pk=sample_id)
+        res = {
+            'id': sample_data.pk,
+            'ip': sample_data.ip,
+            'st': sample_data.service_tag,
+            'ssid': sample_data.ssid,
+            'sku': sample_data.sku,
+            'status_code': sample_data.status.code,
+            'status': sample_data.status.description,
+        }
+
+    elif ssid is not None and st is not None:
+        sample_data = Sample.objects.get(service_tag=st, ssid=ssid)
+        res = {
+            'id': sample_data.pk,
+            'ip': sample_data.ip,
+            'st': sample_data.service_tag,
+            'ssid': sample_data.ssid,
+            'sku': sample_data.sku,
+            'status_code': sample_data.status.code,
+            'status': sample_data.status.description,
+        }
+
+    else:
+        sample_data = Sample.objects.all()
+        res = []
+        for i in sample_data:
+            res.append({
+                'id': i.pk,
+                'ip': i.ip,
+                'st': i.service_tag,
+                'ssid': i.ssid,
+                'sku': i.sku,
+                'status_code': i.status.code,
+                'status': i.status.description,
+                })
+    return res

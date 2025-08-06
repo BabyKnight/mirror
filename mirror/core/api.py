@@ -2,7 +2,7 @@ import os
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .utils import get_chart_data, get_task_data
+from .utils import get_chart_data, get_task_data, get_sample_data
 
 SKIP_LOG_EXTEN_CHECK = True
 SKIP_LOG_SIZE_CHECK = True
@@ -70,11 +70,16 @@ def search(request):
     """
     q = request.GET.get("q", None)
     if q is None:
-		return JsonResponse({})
-
-    c = request.GET.get("c", None)
-
+        return JsonResponse({})
     if q == 'task':
-		res = get_task_data(c)
+        c = request.GET.get("c", None)
+        res = get_task_data(c)
+    elif q == 'sample':
+        sample_id = request.GET.get("id", None)
+        ssid = request.GET.get("ssid", None)
+        st = request.GET.get("st", None)
+        res = get_sample_data(sample_id, ssid, st)
+    else:
+        return JsonResponse({})
 
     return JsonResponse({'data': res})
