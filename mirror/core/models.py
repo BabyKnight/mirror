@@ -27,47 +27,18 @@ class UserProfile(models.Model):
         )
 
 
-class Status(models.Model):
-    """
-    Class definition of Sample Status
-    Status code: 2 digits XY
-        X - 0: Offline
-        X - 1: Online
-        X - 2: Unknown
-        X - 3: Other (Reserved)
-        Y - 0~9: Specific Status
-    """
-    STATUS_CHOISE = {
-        '00': '(OFF) offline',
-        '10': '(A) Available, and',
-        '11': '(A) Available',
-        '12': '(B) OS installing',
-        '13': '(B) OS installed - (Fail)',
-        '14': '(B) OS installed - (Success)',
-        '15': '(B) Test running',
-        '16': '(B) Test Complete - (Fail)',
-        '17': '(B) Test Complete - (Sussess)',
-        '18': '(B) Log uploading',
-        '20': '(U) Unkonwn',
-        '30': '(O) Other',
-    }
-    code = models.CharField(max_length=2, choices=[(k, v) for k, v in STATUS_CHOISE.items()], unique=True, default='20')
-
-    @property
-    def description(self):
-        return self.STATUS_CHOISE.get(self.code, 'Unkown')
-
-    def __str__(self):
-        return "<{} - {}>".format(
-            self.code,
-            self.description,
-        )
-
-
 class Sample(models.Model):
     """
     Class definition of Sample
     """
+    STATUS_CHOISE = {
+        '00': '(OFF) offline',
+        '10': '(AVL) Available',
+        '11': '(BSY) OS installing',
+        '12': '(BSY) Log uploading',
+        '13': '(BSY) TestCase running',
+        '20': '(UNK) Unkonwn',
+    }
     ip = models.GenericIPAddressField(protocol='IPv4')
     service_tag = models.CharField(max_length=8)
     ssid = models.CharField(
@@ -82,7 +53,7 @@ class Sample(models.Model):
     platform = models.CharField(max_length=30)
     sku = models.CharField(max_length=30)
     remark = models.CharField(max_length=20, null=True, blank=True)
-    status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True, blank=True, related_name='samples') 
+    status = models.CharField(max_length=2, choices=[(k, v) for k, v in STATUS_CHOISE.items()], default='20')
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='owned_samples')
     current_user = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='sample_in_use')
     time_created = models.DateTimeField(default=timezone.now)
@@ -90,6 +61,10 @@ class Sample(models.Model):
 
     class Meta:
         unique_together = ('service_tag', 'ssid')
+
+    @property
+    def status_code(self):
+        return self.STATUS_CHOISE.get(self.status, '20')
 
     def __str__(self):
         return "<{}: {} ({})>".format(
@@ -140,16 +115,16 @@ class Task(models.Model):
         ('f', 'OS installation and Test Case Running'),
     ]
     STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('running', 'Running'),
-        ('complete', 'Complete'),
-        ('unknown', 'Unkonwn'),
+        ('11', 'Pending'),
+        ('12', 'Running'),
+        ('13', 'Complete'),
+        ('00', 'Unkonwn'),
     ]
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
     image = models.ForeignKey(Image, on_delete=models.CASCADE)
     task_category = models.CharField(max_length=10, choices=TASK_CHOICES, blank=False)
     result = models.BooleanField(default=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=False, default='unknown')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=False, default='00')
     trigger_by = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name="tasks")
     time_trigger = models.DateTimeField(default=timezone.now)
     time_start = models.DateTimeField(null=True, blank=True)
@@ -169,8 +144,8 @@ class TestCase(models.Model):
     Class definition of TestCase
     """
     number = models.CharField(max_length=20, blank=False)
-    case_name = models.CharField(max_length=20)
-    description = models.CharField(max_length=50)
+    case_name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
     steps = models.CharField(max_length=79)
     version = models.CharField(max_length=20)
 

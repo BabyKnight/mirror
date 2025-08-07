@@ -90,6 +90,10 @@ def update_status(request, item=None):
     """
     api for update status
     Valid item: spl(sample), tsk(task)
+    return value:
+         0: success
+         1: fail
+        -1: param error
     """
     stat = request.GET.get("stat", None)
     if stat is None:

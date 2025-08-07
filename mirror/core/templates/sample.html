@@ -31,12 +31,14 @@
                             <td class="border px-4 py-2">{{ item.owner }}</td>
                             <td class="border px-4 py-2">{{ item.current_user }}</td>
                             <td class="border px-4 py-2">
-                                {% if item.st == '0' %}
+                                {% if item.st == 'OFF' %}
                                     <span class="w-4 h-4 bg-gray-300 block rounded-full"></span>
-                                {% elif item.st == '1' %}
+                                {% elif item.st == 'AVL' %}
                                     <span class="w-4 h-4 bg-green-300 block rounded-full"></span>
-                                {% else %}
+                                {% elif item.st == 'BSY' %}
                                     <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
+                                {% else %}
+                                    <span class="w-4 h-4 bg-gray-500 block rounded-full"></span>
                                 {% endif %}
                             </td>
                         </tr>

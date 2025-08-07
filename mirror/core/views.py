@@ -325,7 +325,15 @@ def sample(request):
             sp['current_user'] = i.current_user.user.get_full_name()
         else:
             sp['current_user'] = ""
-        sp['st'] = i.status.code[0]
+
+        if i.status == '00':
+            sp['st'] = 'OFF'
+        elif i.status == '10':
+            sp['st'] = 'AVL'
+        elif i.status in ['11', '12', '13']:
+            sp['st'] = 'BSY'
+        else:
+            sp['st'] = 'UNK'
         sample_list.append(sp)
 
     context = {
