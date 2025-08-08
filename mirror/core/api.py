@@ -27,18 +27,22 @@ def ping(request):
 def log_upload(request):
     """
     api for upload log from tested client to server
+    retuen code:
+         0 - file upload success
+        -1 - no file upload
+        -2 - file too large
+        -3 - file type is not alowed
     """
     uploaded = request.FILES.get("file")
     if not uploaded:
-        print('not file uploaded')
-        return JsonResponse({'detail': 'Not file uploaded'}, status=400)
+        return HttpResponse(-1, status=400)
 
     if not SKIP_LOG_SIZE_CHECK and uploaded.size > MAX_FILE_SIZE:
-        return JsonResponse({'detail': 'File too large'}, status=413)
+        return HttpResponse(-2, status=413)
 
     original_name = uploaded.name
     if not SKIP_LOG_EXTEN_CHECK and not is_allowed_filename(original_name):
-        return JsonResponse({'detail': 'File type not allowed'}, status=400)
+        return HttpResponse(-3, status=400)
 
     # TODO need to add random string to make it save in case filename conflict
     safe_name = original_name
@@ -48,7 +52,7 @@ def log_upload(request):
         for chunk in uploaded.chunks():
             f.write(chunk)
 
-    return JsonResponse({'detail': 'File uploaded'}, status=200)
+    return HttpResponse(0, status=200)
 
 
 def charts_data(request, chart_type):
@@ -75,7 +79,7 @@ def search(request):
     if q == 'tsk':
         c = request.GET.get("c", None)
         res = get_task_data(c)
-    elif q == 'slp':
+    elif q == 'spl':
         sample_id = request.GET.get("id", None)
         ssid = request.GET.get("ssid", None)
         st = request.GET.get("st", None)

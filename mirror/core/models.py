@@ -112,7 +112,7 @@ class Task(models.Model):
     TASK_CHOICES = [
         ('i', 'OS installation'),
         ('t', 'Test Case Running'),
-        ('f', 'OS installation and Test Case Running'),
+        ('c', 'OS installation and Test Case Running'),
     ]
     STATUS_CHOICES = [
         ('11', 'Pending'),
