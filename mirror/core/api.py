@@ -72,10 +72,10 @@ def search(request):
     q = request.GET.get("q", None)
     if q is None:
         return JsonResponse({})
-    if q == 'task':
+    if q == 'tsk':
         c = request.GET.get("c", None)
         res = get_task_data(c)
-    elif q == 'sample':
+    elif q == 'slp':
         sample_id = request.GET.get("id", None)
         ssid = request.GET.get("ssid", None)
         st = request.GET.get("st", None)
