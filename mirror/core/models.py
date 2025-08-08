@@ -63,7 +63,7 @@ class Sample(models.Model):
         unique_together = ('service_tag', 'ssid')
 
     @property
-    def status_code(self):
+    def status_desc(self):
         return self.STATUS_CHOISE.get(self.status, '20')
 
     def __str__(self):
@@ -130,6 +130,10 @@ class Task(models.Model):
     time_start = models.DateTimeField(null=True, blank=True)
     time_complete = models.DateTimeField(null=True, blank=True)
     log = models.CharField(max_length=50, null=True, blank=True)
+
+    @property
+    def status_desc(self):
+        return dict(self.STATUS_CHOICES).get(self.status, '11')
 
     def __str__(self):
         return "<{}: {}-{}>".format(

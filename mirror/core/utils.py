@@ -138,8 +138,8 @@ def get_task_data(c=None):
                 'image_filepath': i.image.file_path,
                 'sample_id': i.sample.pk,
                 'sample_ip': i.sample.ip,
-                'sample_status_code': i.sample.status.code,
-                'sample_status': i.sample.status.description,
+                'sample_status_code': i.sample.status,
+                'sample_status': i.sample.status_desc,
                 })
         return res
     else:
@@ -158,8 +158,8 @@ def get_sample_data(sample_id=None, ssid=None, st=None):
             'st': sample_data.service_tag,
             'ssid': sample_data.ssid,
             'sku': sample_data.sku,
-            'status_code': sample_data.status.code,
-            'status': sample_data.status.description,
+            'status_code': sample_data.status,
+            'status': sample_data.status_desc,
         }
 
     elif ssid is not None and st is not None:
@@ -170,8 +170,8 @@ def get_sample_data(sample_id=None, ssid=None, st=None):
             'st': sample_data.service_tag,
             'ssid': sample_data.ssid,
             'sku': sample_data.sku,
-            'status_code': sample_data.status.code,
-            'status': sample_data.status.description,
+            'status_code': sample_data.status,
+            'status': sample_data.status_desc,
         }
 
     else:
@@ -184,8 +184,8 @@ def get_sample_data(sample_id=None, ssid=None, st=None):
                 'st': i.service_tag,
                 'ssid': i.ssid,
                 'sku': i.sku,
-                'status_code': i.status.code,
-                'status': i.status.description,
+                'status_code': i.status,
+                'status': i.status_desc,
                 })
     return res
 
