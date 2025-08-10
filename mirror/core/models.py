@@ -112,7 +112,7 @@ class Task(models.Model):
     TASK_CHOICES = [
         ('i', 'OS installation'),
         ('t', 'Test Case Running'),
-        ('c', 'OS installation and Test Case Running'),
+        ('f', 'OS installation and Test Case Running'),
     ]
     STATUS_CHOICES = [
         ('11', 'Pending'),
@@ -140,6 +140,20 @@ class Task(models.Model):
             self.sample.sku,
             self.image.category,
             self.image.image_version,
+        )
+
+
+class Platform(models.Model):
+    """
+    Class definition of Platform
+    """
+    name = models.CharField(max_length=30, unique=True)
+    mkt_name = models.CharField(max_length=60)
+    category = models.CharField(max_length=10)
+
+    def __str__(self):
+        return "<{}>".format(
+            self.name,
         )
 
 

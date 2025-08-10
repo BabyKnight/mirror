@@ -7,4 +7,4 @@ admin.site.register(Sample)
 admin.site.register(Image)
 admin.site.register(Task)
 admin.site.register(TestCase)
-
+admin.site.register(Platform)
