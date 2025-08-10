@@ -21,6 +21,7 @@ urlpatterns = [
     re_path(r'^api/log_upload/?$', log_upload),
     re_path(r'^api/search$', search),
     re_path(r'^api/update_status/(?P<item>[^/]+)?$', update_status),
+    re_path(r'^api/sample/add/?$', add_sample, name="add_sample"),
 
 
     # api for User & User Profile
@@ -32,7 +33,7 @@ urlpatterns = [
     re_path(r'^api/image/delete/?$', dummy_view),
     re_path(r'^api/image/detail/?$', dummy_view),
     # api for Sample
-    re_path(r'^api/sample/add/?$', dummy_view),
+    
     re_path(r'^api/sample/delete/?$', dummy_view),
     re_path(r'^api/sample/update/?$', dummy_view),
     re_path(r'^api/sample/detail/?$', dummy_view),

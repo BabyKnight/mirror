@@ -1,5 +1,6 @@
 import os
 import json
+from .models import Sample, Image, Task, TestCase, Platform, UserProfile
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .utils import get_chart_data, get_task_data, get_sample_data, update_sample_status, update_task_status
@@ -112,4 +113,38 @@ def update_status(request, item=None):
         res = update_sample_status(ssid, st, stat)
     else:
         res = -1
+    return HttpResponse(res)
+
+
+def add_sample(request):
+    """
+    api for add sample
+    """
+    if request.method == 'POST':
+        plat_id = request.POST.get('platform')
+        owner_id = request.POST.get('owner')
+        dpn = request.POST.get('dpn')
+        st = request.POST.get('st')
+        ssid = request.POST.get('ssid')
+        ip = request.POST.get('ip')
+        if ip is None:
+            x_forward_for = request.META.get('HTTP_X_FORWARD_FOR')
+            if x_forward_for:
+                client_ip = x_forward_for.split(',')[0].strip()
+            else:
+                client_ip = request.META.get('REMOTE_ADDR')
+        remark = request.POST.get('remark')
+
+        try:
+            plat = Platform.objects.get(pk=plat_id)
+            owner = UserProfile.objects.get(user__id=owner_id)
+
+            sample = Sample(ip=ip, service_tag=st, ssid=ssid, platform=plat, dpn=dpn, remark=remark, status='10', owner=owner)
+            sample.save()
+            res = 0
+        except Exception as e:
+            raise -2
+    else:
+        res = -1
+    
     return HttpResponse(res)

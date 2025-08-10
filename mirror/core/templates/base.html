@@ -46,7 +46,7 @@
         </div>
 
         <!-- Right panel for Main Content -->
-        <main class="flex-1 p-6 space-y-6" id="main-content">
+        <main class="flex-1 space-y-6" id="main-content">
             {% block content %}
             {% endblock %}
         </main>
@@ -93,6 +93,59 @@
             });
 
 
+        contentDiv.addEventListener('click', function(e){
+            const clickedButton = e.target.closest('.action-btn');
+
+            if(clickedButton){
+                e.preventDefault();
+
+                const actionEvt = clickedButton.dataset.action;
+                const actionId = clickedButton.dataset.actionId;
+
+                if(actionEvt === 'showAddSplPanel'){
+                    const addSplPanel = document.getElementById('spl-add-panel');
+                    const addSplForm = document.getElementById('addSplForm');
+                    addSplForm.reset();
+                    addSplPanel.classList.remove('hidden')
+                }else if(actionEvt === 'hideAddSplPanel'){
+                    const addSplPanel = document.getElementById('spl-add-panel');
+                    addSplPanel.classList.add('hidden')
+                }else if(actionEvt === 'submitAddSplForm'){
+                    const addSplForm = document.getElementById('addSplForm');
+                    const formData = new FormData(addSplForm);
+                    const data = Object.fromEntries(formData.entries());
+
+                    const csrfToken = formData.get('csrfmiddlewaretoken');
+                    if(!csrfToken){
+                        alert('csrf token error')
+                    }
+                    fetch(addSplForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                           // 'Content-Type': 'application/json'
+                        },
+                        //body: JSON.stringify(data),
+                        body: formData,
+                    })
+                    .then(response =>{
+                        if(response.ok){
+                            const addSplPanel = document.getElementById('spl-add-panel');
+                            addSplPanel.classList.add('hidden')
+                            addSplForm.reset();
+                        }
+                    })
+                }else if(actionEvt === 'showAddTskPanel'){
+                    const addSplPanel = document.getElementById('tsk-add-panel');
+                    const addSplForm = document.getElementById('addTskForm');
+                    addSplForm.reset();
+                    addSplPanel.classList.remove('hidden')
+                }else if(actionEvt === 'hideAddTskPanel'){
+                    const addSplPanel = document.getElementById('tsk-add-panel');
+                    addSplPanel.classList.add('hidden')
+                }
+            }
+        })
 
         });
     </script>

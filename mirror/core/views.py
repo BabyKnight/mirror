@@ -2,7 +2,7 @@ from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
-from .models import Sample, Image, Task, TestCase
+from .models import Sample, Image, Task, TestCase, Platform, UserProfile
 from .utils import get_chart_data
 from datetime import datetime, timezone, timedelta
 from django.db.models import Count, Q
@@ -314,6 +314,8 @@ def dashboard(request):
 def sample(request):
     samples = Sample.objects.all()
     sample_list = []
+    plat_info_list = []
+    user_list = []
 
     for i in samples:
         sp = model_to_dict(i)
@@ -336,8 +338,26 @@ def sample(request):
             sp['st'] = 'UNK'
         sample_list.append(sp)
 
+    platforms = Platform.objects.all()
+
+    for i in platforms:
+        plat_info_list.append({
+            'id': i.pk,
+            'plat_name': i.name,
+            })
+
+    users = UserProfile.objects.all()
+
+    for i in users:
+        user_list.append({
+            'id': i.user.id,
+            'user_name': i.full_name,
+            })
+
     context = {
-        "sample_list": sample_list
+        "sample_list": sample_list,
+        "platform_list": plat_info_list,
+        "user_list": user_list
         }
 
     return render(request, 'sample.html', context)
@@ -355,7 +375,7 @@ def image(request):
         img['kernel_build_version'] = i.kernel_version.split("-")[1]
         img_list.append(img)
 
-        context = {
+    context = {
         "image_list": img_list
         }
 

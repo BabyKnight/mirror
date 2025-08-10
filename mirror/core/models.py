@@ -27,6 +27,20 @@ class UserProfile(models.Model):
         )
 
 
+class Platform(models.Model):
+    """
+    Class definition of Platform
+    """
+    name = models.CharField(max_length=30, unique=True)
+    mkt_name = models.CharField(max_length=60)
+    category = models.CharField(max_length=10)
+
+    def __str__(self):
+        return "<{}>".format(
+            self.name,
+        )
+
+
 class Sample(models.Model):
     """
     Class definition of Sample
@@ -50,8 +64,8 @@ class Sample(models.Model):
                     )
                 ]
             )
-    platform = models.CharField(max_length=30)
-    sku = models.CharField(max_length=30)
+    platform = models.ForeignKey(Platform, on_delete=models.CASCADE)
+    dpn = models.CharField(max_length=30)
     remark = models.CharField(max_length=20, null=True, blank=True)
     status = models.CharField(max_length=2, choices=[(k, v) for k, v in STATUS_CHOISE.items()], default='20')
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='owned_samples')
@@ -140,20 +154,6 @@ class Task(models.Model):
             self.sample.sku,
             self.image.category,
             self.image.image_version,
-        )
-
-
-class Platform(models.Model):
-    """
-    Class definition of Platform
-    """
-    name = models.CharField(max_length=30, unique=True)
-    mkt_name = models.CharField(max_length=60)
-    category = models.CharField(max_length=10)
-
-    def __str__(self):
-        return "<{}>".format(
-            self.name,
         )
 
 
