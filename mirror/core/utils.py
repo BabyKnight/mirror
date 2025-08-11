@@ -180,28 +180,34 @@ def get_sample_data(sample_id=None, ssid=None, st=None):
     Method to get sample data by sample id or service tag + bios id
     """
     if sample_id is not None:
-        sample_data = Sample.objects.get(pk=sample_id)
-        res = {
-            'id': sample_data.pk,
-            'ip': sample_data.ip,
-            'st': sample_data.service_tag,
-            'ssid': sample_data.ssid,
-            'dpn': sample_data.dpn,
-            'status_code': sample_data.status,
-            'status': sample_data.status_desc,
-        }
+        try:
+            sample_data = Sample.objects.get(pk=sample_id)
+            res = {
+                'id': sample_data.pk,
+                'ip': sample_data.ip,
+                'st': sample_data.service_tag,
+                'ssid': sample_data.ssid,
+                'dpn': sample_data.dpn,
+                'status_code': sample_data.status,
+                'status': sample_data.status_desc,
+            }
+        except Exception as e:
+            return None
 
     elif ssid is not None and st is not None:
-        sample_data = Sample.objects.get(service_tag=st, ssid=ssid)
-        res = {
-            'id': sample_data.pk,
-            'ip': sample_data.ip,
-            'st': sample_data.service_tag,
-            'ssid': sample_data.ssid,
-            'dpn': sample_data.dpn,
-            'status_code': sample_data.status,
-            'status': sample_data.status_desc,
-        }
+        try:
+            sample_data = Sample.objects.get(service_tag=st, ssid=ssid)
+            res = {
+                'id': sample_data.pk,
+                'ip': sample_data.ip,
+                'st': sample_data.service_tag,
+                'ssid': sample_data.ssid,
+                'dpn': sample_data.dpn,
+                'status_code': sample_data.status,
+                'status': sample_data.status_desc,
+            }
+        except Exception as e:
+            return None
 
     else:
         sample_data = Sample.objects.all()
