@@ -100,17 +100,16 @@ def update_status(request, item=None):
          1: fail
         -1: param error
     """
-    stat = request.GET.get("stat", None)
-    if stat is None:
+    stat = request.GET.get("st", None)
+    item_id = request.GET.get("id", None)
+
+    if stat is None or item_id is None:
         return HttpResponse(-1, status=200)
 
     if item == 'tsk':
-        tsk_id = request.GET.get("id", None)
-        res = update_task_status(tsk_id, stat)
+        res = update_task_status(item_id, stat)
     elif item == 'spl':
-        ssid = request.GET.get("ssid", None)
-        st = request.GET.get("st", None)
-        res = update_sample_status(ssid, st, stat)
+        res = update_sample_status(item_id, stat)
     else:
         res = -1
     return HttpResponse(res)

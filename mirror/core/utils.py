@@ -162,7 +162,7 @@ def get_sample_data(sample_id=None, ssid=None, st=None):
             'ip': sample_data.ip,
             'st': sample_data.service_tag,
             'ssid': sample_data.ssid,
-            'sku': sample_data.sku,
+            'dpn': sample_data.dpn,
             'status_code': sample_data.status,
             'status': sample_data.status_desc,
         }
@@ -174,7 +174,7 @@ def get_sample_data(sample_id=None, ssid=None, st=None):
             'ip': sample_data.ip,
             'st': sample_data.service_tag,
             'ssid': sample_data.ssid,
-            'sku': sample_data.sku,
+            'dpn': sample_data.dpn,
             'status_code': sample_data.status,
             'status': sample_data.status_desc,
         }
@@ -188,19 +188,19 @@ def get_sample_data(sample_id=None, ssid=None, st=None):
                 'ip': i.ip,
                 'st': i.service_tag,
                 'ssid': i.ssid,
-                'sku': i.sku,
+                'dpn': i.dpn,
                 'status_code': i.status,
                 'status': i.status_desc,
                 })
     return res
 
 
-def update_sample_status(ssid, st, stat):
+def update_sample_status(spl_id, stat):
     """
     Method to update the sample status
     """
     try:
-        spl = Sample.objects.get(service_tag=st, ssid=ssid)
+        spl = Sample.objects.get(pk=spl_id)
         spl.status = stat
         spl.save()
         return 0
