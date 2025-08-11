@@ -126,13 +126,17 @@ class TestCase(models.Model):
     number = models.CharField(max_length=20, blank=False)
     case_name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
-    steps = models.CharField(max_length=79)
+    script = models.CharField(max_length=80)
+    is_remote = models.BooleanField(default=True)
+    is_root_required = models.BooleanField(default=False)
     version = models.CharField(max_length=20)
+    owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name="owned_testcase")
 
     def __str__(self):
-        return "<{}: {}>".format(
+        return "<{}: {} (v{})>".format(
             self.number,
             self.case_name,
+            self.version,
         )
 
 

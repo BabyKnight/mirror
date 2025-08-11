@@ -3,7 +3,7 @@ import json
 from .models import Sample, Image, Task, TestCase, Platform, UserProfile
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .utils import get_chart_data, get_task_data, get_sample_data, update_sample_status, update_task_status
+from .utils import get_chart_data, get_task_data, get_sample_data, update_sample_status, update_task_status, get_testcase_data
 
 SKIP_LOG_EXTEN_CHECK = True
 SKIP_LOG_SIZE_CHECK = True
@@ -74,6 +74,7 @@ def search(request):
     q: query item - [must]
     c, ssid, st, id: criteria - [optional]
     """
+    res = None
     q = request.GET.get("q", None)
     if q is None:
         return JsonResponse({})
@@ -85,9 +86,14 @@ def search(request):
         ssid = request.GET.get("ssid", None)
         st = request.GET.get("st", None)
         res = get_sample_data(sample_id, ssid, st)
+    elif q == 'tc':
+        c = request.GET.get("id", None)
+        res = get_testcase_data(c)
     else:
         return JsonResponse({})
 
+    if res is None:
+        return JsonResponse({})
     return JsonResponse({'data': res})
 
 

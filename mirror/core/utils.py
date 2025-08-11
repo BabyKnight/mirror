@@ -195,6 +195,44 @@ def get_sample_data(sample_id=None, ssid=None, st=None):
     return res
 
 
+def get_testcase_data(tc_id=None):
+    """
+    Method to get the testcase data
+    """
+    if tc_id is not None:
+        try:
+            tc = TestCase.objects.get(pk=tc_id)
+            owner_profile = tc.owner
+            res = {
+                'id': tc.pk,
+                'case_name': tc.case_name,
+                'desc': tc.description,
+                'script': tc.script,
+                'is_remote': tc.is_remote,
+                'is_root_required': tc.is_root_required,
+                'ver': tc.version,
+                'owner': owner_profile.user.email if owner_profile else None,
+            }
+        except Exception as e:
+            return None
+    else:
+        tc = TestCase.objects.all()
+        res = []
+        for i in tc:
+            owner_profile = i.owner
+            res.append({
+                'id': i.pk,
+                'case_name': i.case_name,
+                'desc': i.description,
+                'script': i.script,
+                'is_remote': i.is_remote,
+                'is_root_required': i.is_root_required,
+                'ver': i.version,
+                'owner': owner_profile.user.email if owner_profile else None,
+                })
+    return res
+
+
 def update_sample_status(spl_id, stat):
     """
     Method to update the sample status
