@@ -105,8 +105,8 @@ def update_status(request, item=None):
         return HttpResponse(-1, status=200)
 
     if item == 'tsk':
-        ssid = request.GET.get("ssid", None)
-        st = request.GET.get("st", None)
+        tsk_id = request.GET.get("id", None)
+        res = update_task_status(tsk_id, stat)
     elif item == 'spl':
         ssid = request.GET.get("ssid", None)
         st = request.GET.get("st", None)

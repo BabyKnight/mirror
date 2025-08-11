@@ -83,7 +83,7 @@ class Sample(models.Model):
     def __str__(self):
         return "<{}: {} ({})>".format(
             self.platform,
-            self.sku,
+            self.dpn,
             self.remark,
         )
 
@@ -151,7 +151,7 @@ class Task(models.Model):
 
     def __str__(self):
         return "<{}: {}-{}>".format(
-            self.sample.sku,
+            self.sample.dpn,
             self.image.category,
             self.image.image_version,
         )

@@ -194,17 +194,23 @@ def update_sample_status(ssid, st, stat):
     """
     Method to update the sample status
     """
-
-    slp = Sample.objects.get(service_tag=st, ssid=ssid)
-    if not slp:
+    try:
+        spl = Sample.objects.get(service_tag=st, ssid=ssid)
+        spl.status = stat
+        spl.save()
+        return 0
+    except Exception as e:
         return -1
-    #slp.status = Status.objects.get(code=stat)
-    slp.save()
-    return 0
 
 
-def update_task_status(ssid, st, stat):
+def update_task_status(tsk_id, stat):
     """
     Method to update the task status
     """
-    pass
+    try:
+        tsk = Task.objects.get(pk=tsk_id)
+        tsk.status = stat
+        tsk.save()
+        return 0
+    except Exception as e:
+        return -1

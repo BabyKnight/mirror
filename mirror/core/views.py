@@ -119,7 +119,7 @@ def index(request):
     for i in all_task:
         activity = {}
         activity['user'] = i.trigger_by.user.get_full_name()
-        activity['detail'] = "Trigger " +   i.get_task_category_display() + " on " + i.sample.sku +"."
+        activity['detail'] = "Trigger " +   i.get_task_category_display() + " on " + i.sample.dpn +"."
 
         total_sec = (now - i.time_trigger).total_seconds()
         if total_sec < 3600:
@@ -139,7 +139,7 @@ def index(request):
         tsk = model_to_dict(i)
         tsk['type'] = i.task_category[0]
         tsk['platform_name'] = i.sample.platform
-        tsk['sku'] = i.sample.sku
+        tsk['dpn'] = i.sample.dpn
         tsk['image_cat'] = i.image.category
         tsk['kernel_ver'] = i.image.kernel_version.split('-')[-1]
         tsk['trigger_by'] = i.trigger_by.user.get_full_name()
@@ -265,7 +265,7 @@ def dashboard(request):
     for i in all_task:
         activity = {}
         activity['user'] = i.trigger_by.user.get_full_name()
-        activity['detail'] = "Trigger " +   i.get_task_category_display() + " on " + i.sample.sku +"."
+        activity['detail'] = "Trigger " +   i.get_task_category_display() + " on " + i.sample.dpn +"."
 
         total_sec = (now - i.time_trigger).total_seconds()
         if total_sec < 3600:
@@ -285,7 +285,7 @@ def dashboard(request):
         tsk = model_to_dict(i)
         tsk['type'] = i.task_category[0]
         tsk['platform_name'] = i.sample.platform
-        tsk['sku'] = i.sample.sku
+        tsk['dpn'] = i.sample.dpn
         tsk['image_cat'] = i.image.category
         tsk['kernel_ver'] = i.image.kernel_version.split('-')[-1]
         tsk['trigger_by'] = i.trigger_by.user.get_full_name()
@@ -392,7 +392,7 @@ def task(request):
         tsk = model_to_dict(i)
         tsk['type'] = i.task_category[0]
         tsk['platform_name'] = i.sample.platform
-        tsk['sku'] = i.sample.sku
+        tsk['dpn'] = i.sample.dpn
         tsk['image_cat'] = i.image.category
         tsk['kernel_ver'] = i.image.kernel_version.split('-')[-1]
         tsk['trigger_by'] = i.trigger_by.user.get_full_name()
