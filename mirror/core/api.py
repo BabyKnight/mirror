@@ -148,3 +148,39 @@ def add_sample(request):
         res = -1
     
     return HttpResponse(res)
+
+
+def add_task(request):
+    """
+    api for add task
+    """
+    print(request.POST)
+    if request.method == 'POST':
+        sample_id = request.POST.get('sample')
+        user_id = request.POST.get('contact')
+        image_id = request.POST.get('image')
+        task_category = request.POST.get('taskCategory')
+        tc_list = request.POST.get('testcases')
+
+        try:
+            trigger_by = UserProfile.objects.get(user__id=user_id)
+            sample = Sample.objects.get(pk=sample_id)
+
+            if task_category == 'i' or task_category == 'f':
+                image = Image.objects.get(pk=image_id)
+            else:
+                image = None
+
+            new_task = Task.objects.create(sample=sample, trigger_by=trigger_by, image=image, task_category=task_category)
+
+            if task_category == 't' or task_category == 'f':
+                new_task.testcases.set(tc_list)
+
+            new_task.save()
+            res = 1
+        except Exception as e:
+            raise -2
+    else:
+        res = -1
+
+    return HttpResponse(res)

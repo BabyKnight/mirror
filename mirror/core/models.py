@@ -119,6 +119,23 @@ class Image(models.Model):
         )
 
 
+class TestCase(models.Model):
+    """
+    Class definition of TestCase
+    """
+    number = models.CharField(max_length=20, blank=False)
+    case_name = models.CharField(max_length=100)
+    description = models.CharField(max_length=200)
+    steps = models.CharField(max_length=79)
+    version = models.CharField(max_length=20)
+
+    def __str__(self):
+        return "<{}: {}>".format(
+            self.number,
+            self.case_name,
+        )
+
+
 class Task(models.Model):
     """
     Class definition of Task
@@ -135,10 +152,11 @@ class Task(models.Model):
         ('00', 'Unkonwn'),
     ]
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
-    image = models.ForeignKey(Image, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, blank=True)
     task_category = models.CharField(max_length=10, choices=TASK_CHOICES, blank=False)
     result = models.BooleanField(default=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=False, default='00')
+    testcases = models.ManyToManyField(TestCase)
     trigger_by = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name="tasks")
     time_trigger = models.DateTimeField(default=timezone.now)
     time_start = models.DateTimeField(null=True, blank=True)
@@ -152,23 +170,6 @@ class Task(models.Model):
     def __str__(self):
         return "<{}: {}-{}>".format(
             self.sample.dpn,
-            self.image.category,
-            self.image.image_version,
-        )
-
-
-class TestCase(models.Model):
-    """
-    Class definition of TestCase
-    """
-    number = models.CharField(max_length=20, blank=False)
-    case_name = models.CharField(max_length=100)
-    description = models.CharField(max_length=200)
-    steps = models.CharField(max_length=79)
-    version = models.CharField(max_length=20)
-
-    def __str__(self):
-        return "<{}: {}>".format(
-            self.number,
-            self.case_name,
+            self.image.category if self.image else 'Unkonwn',
+            self.image.image_version if self.image else 'Unkonwn',
         )

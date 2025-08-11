@@ -113,7 +113,6 @@
                 }else if(actionEvt === 'submitAddSplForm'){
                     const addSplForm = document.getElementById('addSplForm');
                     const formData = new FormData(addSplForm);
-                    const data = Object.fromEntries(formData.entries());
 
                     const csrfToken = formData.get('csrfmiddlewaretoken');
                     if(!csrfToken){
@@ -123,9 +122,7 @@
                         method: 'POST',
                         headers: {
                             'X-CSRFToken': csrfToken,
-                           // 'Content-Type': 'application/json'
                         },
-                        //body: JSON.stringify(data),
                         body: formData,
                     })
                     .then(response =>{
@@ -143,6 +140,29 @@
                 }else if(actionEvt === 'hideAddTskPanel'){
                     const addSplPanel = document.getElementById('tsk-add-panel');
                     addSplPanel.classList.add('hidden')
+                }else if(actionEvt === 'submitAddTskForm'){
+                    const addTskForm = document.getElementById('addTskForm');
+                    const formData = new FormData(addTskForm);
+
+                    const csrfToken = formData.get('csrfmiddlewaretoken');
+                    if(!csrfToken){
+                        alert('csrf token error')
+                    }
+                    fetch(addTskForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+
+                        },
+                        body: formData,
+                    })
+                    .then(response =>{
+                        if(response.ok){
+                            const addTskPanel = document.getElementById('tsk-add-panel');
+                            addTskPanel.classList.add('hidden')
+                            addTskForm.reset();
+                        }
+                    })
                 }
             }
         })

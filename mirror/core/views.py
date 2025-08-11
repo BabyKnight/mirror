@@ -383,11 +383,15 @@ def image(request):
 
 
 def task(request):
-    all_task = Task.objects.all()
     task_list = []
+    sample_list = []
+    user_list = []
+    testcase_list = []
+    image_list = []
 
     now = datetime.now(timezone.utc)
 
+    all_task = Task.objects.all()
     for i in all_task:
         tsk = model_to_dict(i)
         tsk['type'] = i.task_category[0]
@@ -407,8 +411,40 @@ def task(request):
 
         task_list.append(tsk)
 
+    samples = Sample.objects.all()
+    for i in samples:
+        sample_list.append({
+            'id': i.pk,
+            'name': i.dpn,
+            })
+
+    users = UserProfile.objects.all()
+    for i in users:
+        user_list.append({
+            'id': i.user.id,
+            'name': i.full_name,
+            })
+
+    images = Image.objects.all()
+    for i in images:
+        image_list.append({
+            'id': i.pk,
+            'name': i.image_name,
+            })
+
+    testcases = TestCase.objects.all()
+    for i in testcases:
+        testcase_list.append({
+            'id': i.pk,
+            'name': i.case_name,
+            })
+
     context = {
-        "task_list": task_list
+        "task_list": task_list,
+        'samples': sample_list,
+        'users':  user_list,
+        'testcases': testcase_list,
+        'images': image_list,
         }
 
     return render(request, 'task.html', context)

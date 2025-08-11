@@ -22,13 +22,13 @@ urlpatterns = [
     re_path(r'^api/search$', search),
     re_path(r'^api/update_status/(?P<item>[^/]+)?$', update_status),
     re_path(r'^api/sample/add/?$', add_sample, name="add_sample"),
+    re_path(r'^api/task/add/?$', add_task, name="add_task"),
 
 
     # api for User & User Profile
     re_path(r'^api/user/create/?$', dummy_view),
     re_path(r'^api/user/update/?$', dummy_view),
     # api for Image
-    re_path(r'^api/image/add/?$', dummy_view),
     re_path(r'^api/image/update/?$', dummy_view),
     re_path(r'^api/image/delete/?$', dummy_view),
     re_path(r'^api/image/detail/?$', dummy_view),

@@ -1,69 +1,173 @@
-        <!-- Top Tasks -->
-        <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-            <h2 class="text-xl font-semibold mb-4">Top Tasks</h2>
-            <table class="table-auto w-full text-left">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2">ID</th>
-                        <th class="px-4 py-2">SKU/Platform</th>
-                        <th class="px-4 py-2">Task Type</th>
-                        <th class="px-4 py-2">Image/Kernel</th>
-                        <th class="px-4 py-2">Status</th>
-                        <th class="px-4 py-2">Trigger</th>
+<div id="tsk-add-panel" class="w-full p-10 px-16 bg-white rounded-lg shadow-lg hidden">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Create Your Task</h1>
+        <p class="text-gray-500 mt-2">Please select the details below to create your task.</p>
+    </div>
 
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in task_list %}
-                        <tr class="bg-gray-50">
-                        <td class="border px-4 py-2">#{{ item.id }}</td>
-                        <td class="border px-4 py-2">
-                            <div class="flex items-center">
-                                <div class="ml-4">
-                                    <p class="font-semibold">{{ item.sku }}</p>
-                                    <p class="text-sm text-gray-500">{{ item.platform_name }}</p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="border px-4 py-2">
-                            <div class="flex space-x-2">
-                                {% if item.type == "i" %}
-                                    <span class="bg-blue-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">I</span>
-                                {% elif item.type == "t" %}
-                                    <span class="bg-purple-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">T</span>
-                                {% elif item.type == "f" %}
-                                    <span class="bg-green-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">F</span>
-                                {% endif %}
-                                <span class="bg-gray-300 w-6 h-6 text-gray-700 text-sm flex items-center justify-center rounded-full">+</span>
-                            </div>
-                        </td>
-                        <td class="border px-4 py-2">
-                            <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">{{ item.image_cat }}</span>
-                            <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">{{ item.kernel_ver }}</span>
-                        </td>
-                        <td class="border px-4 py-2">
-                            {% if item.st == 'p' %}
-                                <span class="w-4 h-4 bg-yellow-500 block rounded-full"></span>
-                            {% elif item.st == 'r' %}
-                                <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
-                            {% elif item.st == 'c' %}
-                                <span class="w-4 h-4 bg-green-500 block rounded-full"></span>
-                            {% elif item.st == 'u' %}
-                                <span class="w-4 h-4 bg-gray-200 block rounded-full"></span>
-                            {% endif %}
-                        </td>
-                        <td class="border px-4 py-2">
-                            <div class="flex items-center">
-                                <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full">
-                                <div class="ml-4">
-                                    <p class="font-semibold">{{ item.trigger_by }}</p>
-                                    <p class="text-sm text-gray-500">{{ item.trigger_at }}</p>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+    <form action="{% url 'add_task' %}" method="POST" id='addTskForm'>
+        {% csrf_token %}
+        <div class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
 
-                    {% endfor %}
-                </tbody>
-            </table>
+                <div class="flex flex-col py-3">
+                    <label for="sample" class="text-sm font-medium text-gray-700">Sample</label>
+                    <select id="sample" name="sample" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700">
+                                    <option value="">Please select a Sample</option>
+                                    {% for item in samples %}
+                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                    {% endfor %}
+                    </select>
+                </div>
+                <div class="flex flex-col py-3">
+                    <!-- Reserved -->
+                </div>
+                <div class="flex flex-col py-3">
+                    <label for="contact" class="text-sm font-medium text-gray-700">Issue Contact</label>
+                    <select id="contact" name="contact" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700">
+                                    <option value="">Please select Contact</option>
+                                    {% for item in users %}
+                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                    {% endfor %}
+                    </select>
+                </div>
+                <div class="md:col-span-2 flex flex-col py-3">
+                    <label for="last_name" class="text-sm font-medium text-gray-700">Select a task configuration</label>
+                    <fieldset class="space-y-3 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                        <legend class="sr-only">Task Category</legend>
+
+                          <div class="flex flex-col">
+                            <label for="installOnly" class="flex items-center justify-between gap-4 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50 has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600">
+                              <div>
+                                <p class="text-gray-700">Installation only</p>
+                                <p class="text-gray-900">Select an OS image and install OS without run any testcases</p>
+                              </div>                        
+
+                              <input type="radio" name="taskCategory" value="i" id="installOnly" class="size-5 border-gray-300"/>
+                            </label>
+                          </div>
+
+                          <div class="flex flex-col">
+                            <label for="tcOnly" class="flex items-center justify-between gap-4 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50 has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600">
+                              <div>
+                                <p class="text-gray-700">Test Cases only</p>
+                                <p class="text-gray-900">Select testcases and run without re-install the OS image on target sample</p>
+                              </div>                        
+
+                              <input type="radio" name="taskCategory" value="t" id="tcOnly" class="size-5 border-gray-300"/>
+                            </label>
+                          </div>
+
+                          <div class="flex flex-col">
+                            <label for="combination" class="flex items-center justify-between gap-4 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50 has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600">
+                              <div>
+                                <p class="text-gray-700">Installation and Test Cases Combination</p>
+                                <p class="text-gray-900">Install selected OS image and run selected testcases</p>
+                              </div>                        
+
+                              <input type="radio" name="taskCategory" value="f" id="combination" class="size-5 border-gray-300"/>
+                            </label>
+                          </div>
+                    </fieldset>
+                </div>
+                <div class="flex flex-col py-3">
+                    <label for="image" class="text-sm font-medium text-gray-700">OS Image</label>
+                    <select id="image" name="image" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700">
+                                    <option value="">Please select an OS image</option>
+                                    {% for item in images %}
+                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                    {% endfor %}
+                    </select>
+                </div>
+                <div class="md:col-span-2 flex flex-col py-3">
+                    <label for="testcases" class="text-sm font-medium text-gray-700">Select TestCases</label>
+                    <div class="py-4">
+                        {% for item in testcases %}
+                          <label for="{{ item.id }}" class="flex items-center cursor-pointer select-none py-2">
+                            <input type="checkbox" name="testcases" id="{{ item.id }}" value="{{ item.id }}" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
+                            <span class="ml-2 text-gray-700">{{ item.name }}</span>
+                          </label>
+                        {% endfor %}
+                    </div>
+                </div>          
+
+            </div>
         </div>
+
+        <div class="mt-8 items-center text-center">
+            <button type="submit" id="submit-add-tsk-form" data-action="submitAddTskForm" class="action-btn bg-blue-500 text-white px-6 py-2 rounded-lg font-medium shadow-md hover:bg-blue-600 transition-colors duration-200">Create</button>
+            <a id="cancel-add-tsk" data-action="hideAddTskPanel" class="action-btn text-gray-400 ml-auto p-20 transition hover:text-blue-700 cursor-pointer transition-colors duration-200">Cancel</a>
+        </div>
+
+    </form>
+
+</div>
+
+<!-- Top Tasks -->
+<div class="bg-white rounded-lg shadow-lg p-10 px-16 mt-6">
+    <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold mb-4">Top Tasks</h2>
+        <a  id="btn-show-tsk-add-form" data-action="showAddTskPanel" class="action-btn text-blue-400 transition hover:text-blue-700 cursor-pointer transition-colors duration-200">Schedule a new task ></a>
+    </div>
+    <table class="table-auto w-full text-left">
+        <thead>
+            <tr>
+                <th class="px-4 py-2">ID</th>
+                <th class="px-4 py-2">SKU/Platform</th>
+                <th class="px-4 py-2">Task Type</th>
+                <th class="px-4 py-2">Image/Kernel</th>
+                <th class="px-4 py-2">Status</th>
+                <th class="px-4 py-2">Trigger</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in task_list %}
+                <tr class="bg-gray-50">
+                <td class="border px-4 py-2">#{{ item.id }}</td>
+                <td class="border px-4 py-2">
+                    <div class="flex items-center">
+                        <div class="ml-4">
+                            <p class="font-semibold">{{ item.dpn }}</p>
+                            <p class="text-sm text-gray-500">{{ item.platform_name }}</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="border px-4 py-2">
+                    <div class="flex space-x-2">
+                        {% if item.type == "i" %}
+                            <span class="bg-blue-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">I</span>
+                        {% elif item.type == "t" %}
+                            <span class="bg-purple-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">T</span>
+                        {% elif item.type == "f" %}
+                            <span class="bg-green-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">F</span>
+                        {% endif %}
+                        <span class="bg-gray-300 w-6 h-6 text-gray-700 text-sm flex items-center justify-center rounded-full">+</span>
+                    </div>
+                </td>
+                <td class="border px-4 py-2">
+                    <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">{{ item.image_cat }}</span>
+                    <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">{{ item.kernel_ver }}</span>
+                </td>
+                <td class="border px-4 py-2">
+                    {% if item.st == 'p' %}
+                        <span class="w-4 h-4 bg-yellow-500 block rounded-full"></span>
+                    {% elif item.st == 'r' %}
+                        <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
+                    {% elif item.st == 'c' %}
+                        <span class="w-4 h-4 bg-green-500 block rounded-full"></span>
+                    {% elif item.st == 'u' %}
+                        <span class="w-4 h-4 bg-gray-200 block rounded-full"></span>
+                    {% endif %}
+                </td>
+                <td class="border px-4 py-2">
+                    <div class="flex items-center">
+                        <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full">
+                        <div class="ml-4">
+                            <p class="font-semibold">{{ item.trigger_by }}</p>
+                            <p class="text-sm text-gray-500">{{ item.trigger_at }}</p>
+                        </div>
+                    </div>
+                </td>
+            </tr>            {% endfor %}
+        </tbody>
+    </table>
+</div>
