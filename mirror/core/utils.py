@@ -127,9 +127,12 @@ def get_task_data(c=None):
     """
     # if no criteria provided, keep default to query all
     if c is None:
-        task_data = Task.objects.filter(status='pending').order_by('pk')
+        task_data = Task.objects.filter(status='11').order_by('pk')
         res = []
         for i in task_data:
+            tc_qs = i.testcases.values_list('id', flat=True)
+            tc_list = list(tc_qs) 
+
             res.append({
                 'task_id': i.pk,
                 'task_cate': i.task_category,
@@ -140,6 +143,8 @@ def get_task_data(c=None):
                 'sample_ip': i.sample.ip,
                 'sample_status_code': i.sample.status,
                 'sample_status': i.sample.status_desc,
+                'tc_list': tc_list,
+                'contact': i.trigger_by.user.email,
                 })
         return res
     else:
