@@ -121,12 +121,12 @@ def get_chart_data(chart_type):
     return context
 
 
-def get_task_data(c=None):
+def get_task_data(tsk_id=None):
     """
-    method to get task
+    method to get task data
     """
-    # if no criteria provided, keep default to query all
-    if c is None:
+    # if no task id provided, keep default to query all 'pending' (code 11) task data
+    if tsk_id is None:
         task_data = Task.objects.filter(status='11').order_by('pk')
         res = []
         for i in task_data:
@@ -136,9 +136,11 @@ def get_task_data(c=None):
             res.append({
                 'task_id': i.pk,
                 'task_cate': i.task_category,
-                'image_id': i.image.pk,
-                'image_name': i.image.image_name,
-                'image_filepath': i.image.file_path,
+                'task_status_code': i.status,
+                'task_status': i.status_desc,
+                'image_id': i.image.pk if i.image else None,
+                'image_name': i.image.image_name if i.image else None,
+                'image_filepath': i.image.file_path if i.image else None,
                 'sample_id': i.sample.pk,
                 'sample_ip': i.sample.ip,
                 'sample_status_code': i.sample.status,
@@ -146,10 +148,32 @@ def get_task_data(c=None):
                 'tc_list': tc_list,
                 'contact': i.trigger_by.user.email,
                 })
-        return res
     else:
-        # to be implimented
-        return []
+        try:
+            task = Task.objects.get(pk=tsk_id)
+            tc_qs = task.testcases.values_list('id', flat=True)
+            tc_list = list(tc_qs)
+
+            res = {
+                'task_id': task.pk,
+                'task_cate': task.task_category,
+                'task_status_code': task.status,
+                'task_status': task.status_desc,
+                'image_id': task.image.pk if task.image else None,
+                'image_name': task.image.image_name if task.image else None,
+                'image_filepath': task.image.file_path if task.image else None,
+                'sample_id': task.sample.pk,
+                'sample_ip': task.sample.ip,
+                'sample_status_code': task.sample.status,
+                'sample_status': task.sample.status_desc,
+                'tc_list': tc_list,
+                'contact': task.trigger_by.user.email,
+                }
+        except Exception as e:
+            return None
+
+    return res
+
 
 def get_sample_data(sample_id=None, ssid=None, st=None):
     """

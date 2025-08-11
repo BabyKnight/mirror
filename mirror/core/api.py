@@ -72,23 +72,23 @@ def search(request):
     """
     api for search,
     q: query item - [must]
-    c, ssid, st, id: criteria - [optional]
+    id: task/sample/testcase id - [optional]
     """
     res = None
     q = request.GET.get("q", None)
     if q is None:
         return JsonResponse({})
+
+    item_id = request.GET.get("id", None)
+
     if q == 'tsk':
-        c = request.GET.get("c", None)
-        res = get_task_data(c)
+        res = get_task_data(item_id)
     elif q == 'spl':
-        sample_id = request.GET.get("id", None)
         ssid = request.GET.get("ssid", None)
         st = request.GET.get("st", None)
-        res = get_sample_data(sample_id, ssid, st)
+        res = get_sample_data(item_id, ssid, st)
     elif q == 'tc':
-        c = request.GET.get("id", None)
-        res = get_testcase_data(c)
+        res = get_testcase_data(item_id)
     else:
         return JsonResponse({})
 
