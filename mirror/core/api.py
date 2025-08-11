@@ -154,7 +154,6 @@ def add_task(request):
     """
     api for add task
     """
-    print(request.POST)
     if request.method == 'POST':
         sample_id = request.POST.get('sample')
         user_id = request.POST.get('contact')
