@@ -269,6 +269,8 @@ def update_sample_status(spl_id, stat):
     """
     try:
         spl = Sample.objects.get(pk=spl_id)
+        if stat not in ['00', '10', '11', '12', '13', '20']:
+            return -1
         spl.status = stat
         spl.save()
         return 0
@@ -282,6 +284,8 @@ def update_task_status(tsk_id, stat):
     """
     try:
         tsk = Task.objects.get(pk=tsk_id)
+        if stat not in ['00', '11', '12', '13']:
+            return -1
         tsk.status = stat
         tsk.save()
         return 0

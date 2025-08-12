@@ -97,27 +97,26 @@ def search(request):
     return JsonResponse({'data': res})
 
 
-def update_status(request, item=None):
+def update_status(request):
     """
     api for update status
-    Valid item: spl(sample), tsk(task)
+    params: tsk_id, spl_id, st
     return value:
          0: success
          1: fail
         -1: param error
     """
     stat = request.GET.get("st", None)
-    item_id = request.GET.get("id", None)
+    tsk_id = request.GET.get("tsk_id", None)
+    spl_id = request.GET.get("spl_id", None)
 
-    if stat is None or item_id is None:
-        return HttpResponse(-1, status=200)
-
-    if item == 'tsk':
-        res = update_task_status(item_id, stat)
-    elif item == 'spl':
-        res = update_sample_status(item_id, stat)
+    if tsk_id and not spl_id:
+        res = update_task_status(tsk_id, stat)
+    elif spl_id and not tsk_id:
+        res = update_sample_status(spl_id, stat)
     else:
         res = -1
+
     return HttpResponse(res)
 
 

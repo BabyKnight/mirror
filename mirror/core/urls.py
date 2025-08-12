@@ -20,7 +20,7 @@ urlpatterns = [
     re_path(r'^api/charts_data/(?P<chart_type>[^/]+)/?$', charts_data),
     re_path(r'^api/log_upload/?$', log_upload),
     re_path(r'^api/search$', search),
-    re_path(r'^api/update_status/(?P<item>[^/]+)?$', update_status),
+    re_path(r'^api/update_status$', update_status),
     re_path(r'^api/sample/add/?$', add_sample, name="add_sample"),
     re_path(r'^api/task/add/?$', add_task, name="add_task"),
 
