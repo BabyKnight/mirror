@@ -1,6 +1,7 @@
 import os
 import json
 from .models import Sample, Image, Task, TestCase, Platform, UserProfile
+from config.settings import REPORT_ROOT
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .utils import get_chart_data, get_task_data, get_sample_data, update_sample_status, update_task_status, get_testcase_data
@@ -33,27 +34,56 @@ def log_upload(request):
         -1 - no file upload
         -2 - file too large
         -3 - file type is not alowed
+        -4 - no task id provided
+        -5 - no task found by id
     """
-    uploaded = request.FILES.get("file")
-    if not uploaded:
-        return HttpResponse(-1, status=400)
+    task_id = request.GET.get('tsk_id')
+    log_full_path = request.GET.get('log')
+    if not task_id:
+        return HttpResponse(-4)
 
-    if not SKIP_LOG_SIZE_CHECK and uploaded.size > MAX_FILE_SIZE:
-        return HttpResponse(-2, status=413)
+    try:
+        task = Task.objects.get(pk=task_id)
 
-    original_name = uploaded.name
-    if not SKIP_LOG_EXTEN_CHECK and not is_allowed_filename(original_name):
-        return HttpResponse(-3, status=400)
+        uploaded = request.FILES.get("file")
+        if not uploaded and not log_full_path:
+            return HttpResponse(-1)
+        # if log file path has passed by the api request
+        elif log_full_path:
+            if task.log:
+                task.log = f"{task.log}{log_full_path},"
+            else:
+                task.log = f"{log_full_path},"
+            task.save()
+            return HttpResponse(0)
+        # if no log file path passed in the request
+        else:
+            if not SKIP_LOG_SIZE_CHECK and uploaded.size > MAX_FILE_SIZE:
+                return HttpResponse(-2)     
 
-    # TODO need to add random string to make it save in case filename conflict
-    safe_name = original_name
-    save_path = os.path.join('/tmp', safe_name)
+            original_name = uploaded.name
+            if not SKIP_LOG_EXTEN_CHECK and not is_allowed_filename(original_name):
+                return HttpResponse(-3)
 
-    with open(save_path, 'wb') as f:
-        for chunk in uploaded.chunks():
-            f.write(chunk)
+            # TODO need to add random string to make it save in case filename conflict
+            safe_name = original_name
+            report_saved_path = os.path.join(REPORT_ROOT, task_id)
+            report_saved_path.mkdir(parents=True, exist_ok=True)
+            full_path = os.path.join(report_saved_path, safe_name)      
 
-    return HttpResponse(0, status=200)
+            with open(full_path, 'wb') as f:
+                for chunk in uploaded.chunks():
+                    f.write(chunk)      
+            if task.log:
+                task.log = f"{task.log}{full_path},"
+            else:
+                task.log = f"{full_path},"
+            task.save()
+
+            return HttpResponse(0)
+
+    except Exception as e:
+        return HttpResponse(-5)
 
 
 def charts_data(request, chart_type):
