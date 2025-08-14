@@ -34,9 +34,10 @@ def index(request):
             ).count()
     total_sample_delta = total_sample_this_month - total_sample_last_month
     sample_trend = {
-                'title': 'Total Sample (this month)',
+                'title': 'Total Sample',
                 'data': total_sample_this_month,
                 'delta': total_sample_delta,
+                'moment': 'Since last month',
             }
 
     # total image by week
@@ -57,9 +58,10 @@ def index(request):
             ).count()
     total_image_delta = total_image_this_week - total_image_last_week
     image_trend = {
-                'title': 'Image Release (this Week)',
+                'title': 'Image Release',
                 'data': total_image_this_week,
-                'delta': total_image_delta
+                'delta': total_image_delta,
+                'moment': 'Since last week',
             }
 
     # total tasks by month
@@ -74,9 +76,10 @@ def index(request):
             ).count()
     total_task_delta = total_task_this_month - total_task_last_month
     task_trend = {
-                'title': 'Total Task (this month)',
+                'title': 'Total Task',
                 'data': total_task_this_month,
-                'delta': total_task_delta
+                'delta': total_task_delta,
+                'moment': 'Since last month'
             }
 
     # task failure rate by week
@@ -102,9 +105,10 @@ def index(request):
         failure_rate_this_month = total_failed_task_this_month / total_task_this_month
     failure_rate_delta = round((failure_rate_this_month - failure_rate_last_month), 2)
     fr_trend = {
-                'title':'Task Failure Rate (this month)',
+                'title':'Task Failure Rate',
                 'data': round(failure_rate_this_month, 2),
-                'delta': failure_rate_delta
+                'delta': failure_rate_delta,
+                'moment': 'Since last month',
             }
 
     # image chart
@@ -131,36 +135,12 @@ def index(request):
 
         activity_list.append(activity)
 
-    # search for Task
-    all_task = Task.objects.all()
-    task_list = []
-
-    for i in all_task:
-        tsk = model_to_dict(i)
-        tsk['type'] = i.task_category[0]
-        tsk['platform_name'] = i.sample.platform
-        tsk['dpn'] = i.sample.dpn
-        tsk['image_cat'] = i.image.category if i.image else 'Unkonwn'
-        tsk['kernel_ver'] = i.image.kernel_version.split('-')[-1] if i.image else 'Unkonwn'
-        tsk['trigger_by'] = i.trigger_by.user.get_full_name()
-        tsk['st'] = i.status[0]
-        total_sec = (now - i.time_trigger).total_seconds()
-        if total_sec < 3600:
-            tsk['trigger_at'] = str(int(total_sec // 60)) + ' Minutes Ago'
-        elif total_sec < 86400:
-            tsk['trigger_at'] = str(int(total_sec // 3600)) + ' Hours Ago'
-        else:
-            tsk['trigger_at'] = str(int(total_sec // 86400)) + ' Days Ago'
-
-        task_list.append(tsk)
-
     context = {
         "trends": [sample_trend, image_trend, task_trend, fr_trend],
         "image_chart_data": image_chart_data,
         "task_sum_chart_data": task_sum_chart_data,
         "task_st_chart_data": task_st_chart_data,
         "activity_list": activity_list,
-        "task_list": task_list,
     }
     return render(request, 'index.html', context)
 
