@@ -8,8 +8,31 @@
   <link href="{% static '/core/css/tailwind.min.css' %}" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    .nav-link {
+        color: #A1A2A6;
+    }
+    .nav-link:hover {
+        color: #1F253A;
+        background-color: #FAFAFA;
+        transition: background-color 0.2s easy-in-out;
+    }
+    .nav-act{
+        color: #5E5AFE;
+        background-color: #F2F1FF;
+        background-image: linear-gradient(to right, #F2F1FF, #FFFFFF 20%);
+        background-size: 200% 100%;
+        background-position: left;
+        transition: background-position 0.5s easy-in-out;
+    }
+    .nav-deact {
+        color: #A1A2A6;
+    }
     body {
       font-family: 'Roboto', sans-serif;
+      background-color: #F7FAFF;
+    }
+    .c-title {
+        color: #605BDF;
     }
   </style>
 </head>
@@ -17,15 +40,15 @@
   <script src="{% static 'core/js/chart.js' %}"></script>
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <aside class="w-64 bg-gray-100 p-6 space-y-8 text-grey-400">
-      <div class="text-2xl font-bold mb-6 text-grey-600">Linux <span>Test Lab</span></div>
+    <aside class="w-64 bg-white pt-12 space-y-8 text-grey-400">
+      <div class="text-3xl font-bold mx-6 mb-20 text-grey-600 c-title">Linux <span>Test Lab</span></div>
       <nav class="space-y-8">
-        <a href="#" class="block py-2 px-4 font-bold text-grey-400 bg-white rounded nav-link" data-url='/index/dashboard/'>Dashboard</a>
-        <a href="#" class="block py-2 px-4 font-bold text-grey-400 hover:bg-white rounded nav-link" data-url='/index/sample/'>Samples</a>
-        <a href="#" class="block py-2 px-4 font-bold text-grey-400 hover:bg-white rounded nav-link" data-url='/index/task/'>Tasks</a>
-        <a href="#" class="block py-2 px-4 font-bold text-grey-400 hover:bg-white rounded nav-link" data-url='/index/image/'>Images</a>
-        <a href="#" class="block py-2 px-4 font-bold text-grey-400 hover:bg-white rounded nav-link" data-url='/index/testcase/'>Test Cases</a>
-        <a href="#" class="block py-2 px-4 font-bold text-grey-400 hover:bg-white rounded nav-link" data-url='/index/platform/'>Platforms</a>
+        <a href="#" class="block py-2 px-10 text-xl font-bold text-grey-400 rounded nav-link nav-act" data-url='/index/dashboard/'>Dashboard</a>
+        <a href="#" class="block py-2 px-10 text-xl font-bold text-grey-400 hover:bg-white rounded nav-link nav-deact" data-url='/index/sample/'>Samples</a>
+        <a href="#" class="block py-2 px-10 text-xl font-bold text-grey-400 hover:bg-white rounded nav-link nav-deact" data-url='/index/task/'>Tasks</a>
+        <a href="#" class="block py-2 px-10 text-xl font-bold text-grey-400 hover:bg-white rounded nav-link nav-deact" data-url='/index/image/'>Images</a>
+        <a href="#" class="block py-2 px-10 text-xl font-bold text-grey-400 hover:bg-white rounded nav-link nav-deact" data-url='/index/testcase/'>Test Cases</a>
+        <a href="#" class="block py-2 px-10 text-xl font-bold text-grey-400 hover:bg-white rounded nav-link nav-deact" data-url='/index/platform/'>Platforms</a>
       </nav>
     </aside>
 
@@ -69,8 +92,14 @@
 
             links.forEach(link => {
                 link.addEventListener('click', function(event){
+                    const currentActiveLink = document.getElementsByClassName('nav-act')[0];
+                    currentActiveLink.classList.add('nav-deact');
+                    currentActiveLink.classList.remove('nav-act');
+                    event.target.classList.add('nav-act');
+                    event.target.classList.remove('nav-deact');
                     event.preventDefault();
                     const url = this.getAttribute('data-url');
+
 
                     fetch(url)
                         .then(response =>{
