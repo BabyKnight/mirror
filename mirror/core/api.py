@@ -90,7 +90,7 @@ def charts_data(request, chart_type):
     """ 
     api for frontend request of chart data 
     Availble chart type:
-        - platform
+        - sample_statistics
         - image
         - task_result_sum
         - task_st_this_week

@@ -29,12 +29,16 @@
 
 <!-- Charts -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-    <div class="bg-white rounded-lg shadow-md p-6 col-span-1">
-        <h2 class="text-xl font-semibold mb-4">Platform Status</h2>
-        <canvas id="platformStatusChart" class="w-full h-48"></canvas>
+    <div class="relative bg-white rounded-lg shadow-md p-6 col-span-1">
+        <h2 class="text-xl font-semibold mb-4">Sample Statistics</h2>
+        <canvas id="sampleStChart" class="w-1/2 h-24"></canvas>
         <ul class="mt-4 space-y-2 text-sm text-gray-500">
-            <li><span class="text-green-500 font-bold">•</span> RTSed</li>
-            <li><span class="text-blue-500 font-bold">•</span> Development Phase</li>
+            <li><span class="text-red-400 font-bold">•</span> EVT</li>
+            <li><span class="text-yellow-400 font-bold">•</span> DVT</li>
+            <li><span class="text-green-500 font-bold">•</span> DVT1</li>
+            <li><span class="text-blue-700 font-bold">•</span> DVT2</li>
+            <li><span class="text-purple-800 font-bold">•</span> ENG Regression</li>
+            <li><span class="text-grey-500 font-bold">•</span> Others</li>
         </ul>
     </div>
 
@@ -274,31 +278,65 @@
         renderTaskSummaryChart()
     }
 
-    function renderDashboardPlatformStChart(){
-        const platStCtx = document.getElementById('platformStatusChart').getContext('2d'); 
-        new Chart(platStCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Development Phase', 'RTSed'],
-                datasets: [{
-                    data: [11, 25],
-                    backgroundColor: ['#6366F1', '#34D399']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
+    function renderDashboardSampleStChart(){
+
+        // chart for sample statistics data
+        const platStCtx = document.getElementById('sampleStChart').getContext('2d'); 
+
+
+        let splStatisticsChart;
+        function renderSampleStatisticsChart(){
+            fetch("/api/charts_data/sample_statistics")
+            .then(response =>{
+                if (!response.ok){
+                    throw new Error('Charts data error')
                 }
-            }
-        });
+                return response.json();
+            })
+            .then(data => {
+                console.log('retrive data success', data);
+                splStChartData = data['dataset']
+                if (splStatisticsChart) {
+                    splStatisticsChart.destory();
+                }
+    
+                splStatisticsChart = new Chart(platStCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['EVT', 'DVT', 'DVT1', 'DVT2', 'ENG Regression', 'Other'],
+                        datasets: [{
+                            data: [
+                                splStChartData['EVT'], 
+                                splStChartData['DVT'], 
+                                splStChartData['DVT1'], 
+                                splStChartData['DVT2'], 
+                                splStChartData['PILOT'], 
+                                splStChartData['Unknown'], 
+                            ],
+                            backgroundColor: ['#FF6B6B','#FFD166','#06D6A0','#118AB2','#6A4C93','#DFDFDF']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                })
+                
+            })
+            .catch(error => {
+                console.error('retrive data error', error)
+            });
+        }
+        renderSampleStatisticsChart()
     }
 
     function renderChartsInDashboard(){
         renderDashboardTaskCountChart()
         renderDashboardImageReleasedChart()
         renderDashboardTaskSummaryChart()
-        renderDashboardPlatformStChart()
+        renderDashboardSampleStChart()
     }
 
     document.addEventListener('DOMContentLoaded', function(){

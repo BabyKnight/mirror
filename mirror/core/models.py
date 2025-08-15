@@ -51,7 +51,15 @@ class Sample(models.Model):
         '11': '(BSY) OS installing',
         '12': '(BSY) Log uploading',
         '13': '(BSY) TestCase running',
-        '20': '(UNK) Unkonwn',
+        '20': '(UNK) Unknown',
+    }
+    BUILD_PHASE_CHOISE = {
+        'EVT': 'EVT',
+        'DVT': 'DVT',
+        'DVT1': 'DVT1',
+        'DVT2': 'DVT2',
+        'PILOT': 'PILOT',
+        'Unknown': 'Unknown',
     }
     ip = models.GenericIPAddressField(protocol='IPv4')
     service_tag = models.CharField(max_length=8)
@@ -67,6 +75,7 @@ class Sample(models.Model):
     platform = models.ForeignKey(Platform, on_delete=models.CASCADE)
     dpn = models.CharField(max_length=30)
     remark = models.CharField(max_length=20, null=True, blank=True)
+    build_phase = models.CharField(max_length=10, choices=[(k, v) for k, v in BUILD_PHASE_CHOISE.items()], default='Unknown')
     status = models.CharField(max_length=2, choices=[(k, v) for k, v in STATUS_CHOISE.items()], default='20')
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='owned_samples')
     current_user = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name='sample_in_use')
@@ -81,10 +90,11 @@ class Sample(models.Model):
         return self.STATUS_CHOISE.get(self.status, '20')
 
     def __str__(self):
-        return "<{}: {} ({})>".format(
+        return "{} - <{}: {} ({})>".format(
+            str(self.pk),
             self.platform,
             self.dpn,
-            self.remark,
+            self.build_phase,
         )
 
 

@@ -11,7 +11,7 @@ def get_chart_data(chart_type):
     """
     method to get chart data by chart type
     Availble chart type:
-        - platform
+        - sample_statistics
         - image
         - task_result_sum
         - task_st_this_week
@@ -106,9 +106,11 @@ def get_chart_data(chart_type):
             dataset[label.index(i['day'].strftime('%a'))] = i['count']
 
 
-    elif chart_type == 'platform':
-        pass
-
+    elif chart_type == 'sample_statistics':
+        dataset = {}
+        spl_phase_count = Sample.objects.values('build_phase').annotate(count=Count('build_phase')).order_by('build_phase')
+        for i in spl_phase_count:
+            dataset[i['build_phase']] = i['count']
 
     else:
         return {'msg': 'charts type error'}
