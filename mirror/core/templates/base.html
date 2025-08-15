@@ -154,7 +154,7 @@
 
     <div class="flex-1 p-6 space-y-6 content-panel">
         <!-- Top Bar (always keep in the top of the right panel)-->
-        <div class="w-full flex items-center bg-grey-100 border-0 border-b-2 border-gray-200 p-4">
+        <div class="w-full flex items-center bg-grey-100 border-0 border-b-2 border-gray-200 p-4 mb-10">
             <!-- Search box in the center -->
             <div class="flex items-center p-2 bg-gray-100 search-bg">
 		        <svg class="h-7 w-7 text-gray-500 mx-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -169,7 +169,7 @@
         </div>
 
         <!-- Right panel for Main Content -->
-        <main class="flex-1 space-y-6" id="main-content">
+        <main class="flex-1 space-y-6 mt-8" id="main-content">
             {% block content %}
             {% endblock %}
         </main>

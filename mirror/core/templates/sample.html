@@ -61,46 +61,46 @@
         </div>
 
     </form>
-
 </div>
 
-<!-- Samples -->
-<div class="bg-white rounded-lg shadow-lg p-10 px-16 mt-6">
+
+<!-- Samples list -->
+<div class="bg-white rounded-lg shadow-lg p-10 px-16 mt-6 overflow-x-auto">
     <div class="flex items-center justify-between">
         <h2 class="text-xl font-semibold mb-4">Samples</h2>
         <a  id="btn-show-spl-add-form" data-action="showAddSplPanel" class="action-btn text-blue-400 transition hover:text-blue-700 cursor-pointer transition-colors duration-200">Add more sample ></a>
     </div>
 
-    <table class="table-auto w-full text-left">
-        <thead>
-            <tr>
-                <th class="px-4 py-2">No.</th>
-                <th class="px-4 py-2">Platform</th>
-                <th class="px-4 py-2">DPN</th>
-                <th class="px-4 py-2">SSID</th>
-                <th class="px-4 py-2">Service Tag</th>
-                <th class="px-4 py-2">IP Address</th>
-                <th class="px-4 py-2">Owner</th>
-                <th class="px-4 py-2">Current User</th>
-                <th class="px-4 py-2">Status</th>
+    <table class="min-w-full divide-y divide-grey-200 text-left">
+        <thead class="bg-grey-100 whitespace-nowrap">
+            <tr class="bg-grey-100 text-sm">
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">No.</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">Platform</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">DPN</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">SSID</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">Service Tag</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">IP Address</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">Owner</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">Current User</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">Status</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-white divide-y divide-grey-200 whitespace-nowrap">
             {% for item in sample_list %}
-                <tr class="bg-gray-50">
-                    <td class="border px-4 py-2">#{{ item.id}}</td>
-                    <td class="border px-4 py-2">{{ item.platform }}</td>
-                    <td class="border px-4 py-2">{{ item.dpn }}</td>
-                    <td class="border px-4 py-2">
+                <tr class="bg-gray-50 text-xs">
+                    <td class="bg-white px-4 py-4">#{{ item.id}}</td>
+                    <td class="bg-white px-4 py-4">{{ item.platform }}</td>
+                    <td class="bg-white px-4 py-4">{{ item.dpn }}</td>
+                    <td class="bg-white px-4 py-4">
                         <span class="bg-gray-200 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-900 dark:text-gray-300">
                             0x{{ item.ssid }}
                         </span>
                     </td>
-                    <td class="border px-4 py-2">{{ item.service_tag }}</td>
-                    <td class="border px-4 py-2">{{ item.ip }}</td>
-                    <td class="border px-4 py-2">{{ item.owner }}</td>
-                    <td class="border px-4 py-2">{{ item.current_user }}</td>
-                    <td class="border px-4 py-2">
+                    <td class="bg-white px-4 py-4">{{ item.service_tag }}</td>
+                    <td class="bg-white px-4 py-4">{{ item.ip }}</td>
+                    <td class="bg-white px-4 py-4">{{ item.owner }}</td>
+                    <td class="bg-white px-4 py-4">{{ item.current_user }}</td>
+                    <td class="bg-white px-4 py-4">
                         {% if item.st == 'OFF' %}
                             <span class="w-4 h-4 bg-gray-300 block rounded-full"></span>
                         {% elif item.st == 'AVL' %}
