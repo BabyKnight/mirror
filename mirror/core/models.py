@@ -62,7 +62,7 @@ class Sample(models.Model):
         'Unknown': 'Unknown',
     }
     ip = models.GenericIPAddressField(protocol='IPv4')
-    service_tag = models.CharField(max_length=8)
+    service_tag = models.CharField(max_length=8, null=True, blank=True,)
     ssid = models.CharField(
             max_length=4,
             validators=[
@@ -70,7 +70,9 @@ class Sample(models.Model):
                     regex=r'^[0-9a-fA-F]{4}',
                     message='Must be a 4-character hexadecimal value'
                     )
-                ]
+                ],
+            null=True,
+            blank=True,
             )
     platform = models.ForeignKey(Platform, on_delete=models.CASCADE)
     dpn = models.CharField(max_length=30)

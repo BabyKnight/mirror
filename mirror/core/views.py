@@ -328,6 +328,9 @@ def sample(request):
 
     users = UserProfile.objects.all()
 
+    build_phase_choices = Sample._meta.get_field('build_phase')
+    bp_choices = build_phase_choices.choices
+
     for i in users:
         user_list.append({
             'id': i.user.id,
@@ -337,7 +340,8 @@ def sample(request):
     context = {
         "sample_list": sample_list,
         "platform_list": plat_info_list,
-        "user_list": user_list
+        "user_list": user_list,
+        "build_phase": bp_choices,
         }
 
     return render(request, 'sample.html', context)

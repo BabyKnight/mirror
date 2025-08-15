@@ -161,6 +161,7 @@ def add_sample(request):
         st = request.POST.get('st')
         ssid = request.POST.get('ssid')
         ip = request.POST.get('ip')
+        build_phase = request.POST.get('build')
         if ip is None:
             x_forward_for = request.META.get('HTTP_X_FORWARD_FOR')
             if x_forward_for:
@@ -173,7 +174,7 @@ def add_sample(request):
             plat = Platform.objects.get(pk=plat_id)
             owner = UserProfile.objects.get(user__id=owner_id)
 
-            sample = Sample(ip=ip, service_tag=st, ssid=ssid, platform=plat, dpn=dpn, remark=remark, status='10', owner=owner)
+            sample = Sample(ip=ip, service_tag=st, ssid=ssid, platform=plat, dpn=dpn, remark=remark, status='10', owner=owner, build_phase=build_phase)
             sample.save()
             res = 0
         except Exception as e:

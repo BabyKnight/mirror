@@ -104,6 +104,14 @@
         transform: translateY(-8px) scale(1.02);
         box-shadow: 0 10px 20px rgb(0, 0, 0, 0.15);
     }
+    .content-panel{
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+    .content-wrap{
+        flex-grow: 1;
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-700 regular-text">
@@ -166,20 +174,21 @@
             <div class="ml-auto mr-4">
                 <img src="{% static 'core/img/avatar_linux.png' %}" alt="User Avatar" class="w-10 h-10 rounded-full border-2 border-gray-300">
             </div>
-        </div>
+        </div>  
 
         <!-- Right panel for Main Content -->
-        <main class="flex-1 space-y-6 mt-8" id="main-content">
+        <main class="flex-1 space-y-6 mt-8 content-wrap" id="main-content">
             {% block content %}
             {% endblock %}
         </main>
-	<!-- footer -->
-	<div class="mt-16 border-t border-gray-200 pt-8 flex items-center">
-      	  <ul class="flex flex-wrap justify-center gap-4 text-xs">
-            <li>
-              <a href="#" class="text-gray-500 transition hover:opacity-75"> 2025 © XXX. - Designed by XXX</a>
-            </li>
-          </ul>
+
+    	<!-- footer -->
+    	<div class="mt-16 border-t border-gray-200 pt-8 flex items-center c-footer">
+          	  <ul class="flex flex-wrap justify-center gap-4 text-xs">
+                <li>
+                  <a href="#" class="text-gray-500 transition hover:opacity-75"> 2025 © XXX. - Designed by XXX</a>
+                </li>
+              </ul>
         </div>
     </div> <!--End of div for right main content panel  -->
 
@@ -241,26 +250,42 @@
                     addSplPanel.classList.add('hidden')
                 }else if(actionEvt === 'submitAddSplForm'){
                     const addSplForm = document.getElementById('addSplForm');
-                    const formData = new FormData(addSplForm);
 
-                    const csrfToken = formData.get('csrfmiddlewaretoken');
-                    if(!csrfToken){
-                        alert('csrf token error')
-                    }
-                    fetch(addSplForm.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': csrfToken,
-                        },
-                        body: formData,
-                    })
-                    .then(response =>{
-                        if(response.ok){
-                            const addSplPanel = document.getElementById('spl-add-panel');
-                            addSplPanel.classList.add('hidden')
-                            addSplForm.reset();
+
+                    const requiredInputs = addSplForm.querySelectorAll('[data-required]');
+                    let allFieldValid = true
+                    requiredInputs.forEach(input => {
+                        if (input.value.trim() === ''){
+                            input.classList.add('text-red-500');
+                            input.classList.remove('text-grey-700')
+                            allFieldValid = false
+                        }else{
+                            input.classList.remove('text-red-500');
+                            input.classList.add('text-grey-800')
                         }
-                    })
+                    });
+                    if (allFieldValid){
+                        const formData = new FormData(addSplForm);  
+
+                        const csrfToken = formData.get('csrfmiddlewaretoken');
+                        if(!csrfToken){
+                            alert('csrf token error')
+                        }
+                        fetch(addSplForm.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrfToken,
+                            },
+                            body: formData,
+                        })
+                        .then(response =>{
+                            if(response.ok){
+                                const addSplPanel = document.getElementById('spl-add-panel');
+                                addSplPanel.classList.add('hidden')
+                                addSplForm.reset();
+                            }
+                        })
+                    }
                 }else if(actionEvt === 'showAddTskPanel'){
                     const addSplPanel = document.getElementById('tsk-add-panel');
                     const addSplForm = document.getElementById('addTskForm');

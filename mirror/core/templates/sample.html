@@ -1,53 +1,62 @@
-<div id="spl-add-panel" class="w-full p-10 px-16 bg-white rounded-lg shadow-lg hidden">
-    <div class="text-center mb-8">
+<div id="spl-add-panel" class="w-full p-10 px-16 bg-white rounded-lg shadow-lg hidden flex flex-col items-center">
+    <div class="text-center mb-8 w-full">
         <h1 class="text-3xl font-bold text-gray-900">Register Your Sample</h1>
         <p class="text-gray-500 mt-2">Please fill in the details below to register your sample.</p>
     </div>
 
-    <form action="{% url 'add_sample' %}" method="POST" id='addSplForm'>
+    <form action="{% url 'add_sample' %}" method="POST" id='addSplForm' class="pt-6 w-2/3">
         {% csrf_token %}
-        <div class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-
-                <div class="flex flex-col py-3">
-                    <label for="platform" class="text-sm font-medium text-gray-700">Platform</label>
-                    <select id="platform" name="platform" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700">
-                                    <option value="">Please select a platform</option>
-                                    {% for item in platform_list %}
-                                        <option value="{{ item.id }}">{{ item.plat_name }}</option>
-                                    {% endfor %}
+        <div class="space-y-4 text-sm">
+            <div class="grid grid-cols-5 gap-x-8 gap-y-4">
+                <div class="col-span-2 flex flex-col pr-10">
+                    <label for="DPN" class="text-sm font-medium text-gray-700">* DPN</label>
+                    <input id='dpn' name='dpn' type="text" placeholder="DPN" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required/>
+                </div>
+                <div class="col-span-1 flex flex-col pr-10"></div>
+                <div class="col-span-2 flex flex-col pr-10">
+                    <label for="platform" class="text-sm font-medium text-gray-700">* Platform</label>
+                    <select id="platform" name="platform" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required>
+                        <option value="">Please select a platform</option>
+                        {% for item in platform_list %}
+                            <option value="{{ item.id }}">{{ item.plat_name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
-                <div class="flex flex-col py-3">
-                    <label for="owner" class="text-sm font-medium text-gray-700">Owner</label>
-                    <select id="owner" name="owner" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700">
-                                    <option value="">Please select Owner</option>
-                                    {% for item in user_list %}
-                                        <option value="{{ item.id }}">{{ item.user_name }}</option>
-                                    {% endfor %}
+                <div class="col-span-2 flex flex-col pr-10">
+                    <label for="ip" class="text-sm font-medium text-gray-700">* IP</label>
+                    <input id='ip' name='ip' type="text" placeholder="IP" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required/>
+                </div>
+                <div class="col-span-3 flex flex-col pr-10"></div>
+                <div class="col-span-2 flex flex-col pr-10">
+                    <label for="owner" class="text-sm font-medium text-gray-700">* Owner</label>
+                    <select id="owner" name="owner" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required>
+                        <option value="">Please select Owner</option>
+                        {% for item in user_list %}
+                            <option value="{{ item.id }}">{{ item.user_name }}</option>
+                        {% endfor %}
                     </select>
                 </div>
-                <div class="md:col-span-2 flex flex-col py-3">
-                    <label for="DPN" class="text-sm font-medium text-gray-700">DPN</label>
-                    <input id='dpn' name='dpn' type="text" placeholder="DPN" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" />
-                </div>          
-
-                <div class="md:col-span-2 flex flex-col py-3">
+                <div class="col-span-1 flex flex-col pr-10"></div>
+                <div class="col-span-2 flex flex-col pr-10">
+                    <label for="build" class="text-sm font-medium text-gray-700">* Build Phase</label>
+                    <select id="build" name="build" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required>
+                        <option value="">Please select Buils Phase</option>
+                        {% for key, val in build_phase %}
+                            <option value="{{ key }}">{{ val }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-span-5 flex flex-col pr-10"></div>
+                <div class="col-span-2 flex flex-col pr-10">
                     <label for="st" class="text-sm font-medium text-gray-700">Service Tag</label>
                     <input id='st' name='st' type="text" placeholder="Service Tag" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" />
-                </div>          
-
-                <div class="md:col-span-2 flex flex-col py-3">
+                </div>
+                <div class="col-span-1 flex flex-col pr-10"></div>
+                <div class="col-span-2 flex flex-col pr-10">
                     <label for="ssid" class="text-sm font-medium text-gray-700">SSID</label>
                     <input id='ssid' name='ssid' type="text" placeholder="SSID" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" />
-                </div>          
-
-                <div class="md:col-span-2 flex flex-col py-3">
-                    <label for="ip" class="text-sm font-medium text-gray-700">IP</label>
-                    <input id='ip' name='ip' type="text" placeholder="IP" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" />
-                </div>          
-
-                <div class="md:col-span-2 flex flex-col py-3">
+                </div>
+                <div class="col-span-5 flex flex-col pr-10">
                     <label for="remark" class="text-sm font-medium text-gray-700">Remark</label>
                     <input id='remark' name='remark' type="text" placeholder="Remark" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" />
                 </div>
@@ -57,7 +66,7 @@
 
         <div class="mt-8 items-center text-center">
             <button type="submit" id="submit-add-spl-form" data-action="submitAddSplForm" class="action-btn bg-blue-500 text-white px-6 py-2 rounded-lg font-medium shadow-md hover:bg-blue-600 transition-colors duration-200">Register</button>
-            <a id="cancel-add-spl" data-action="hideAddSplPanel" class="action-btn text-gray-400 ml-auto p-20 transition hover:text-blue-700 cursor-pointer transition-colors duration-200">Cancel</a>
+            <a id="cancel-add-spl" data-action="hideAddSplPanel" class="action-btn text-gray-400 ml-auto px-20 transition hover:text-blue-700 cursor-pointer transition-colors duration-200">Cancel</a>
         </div>
 
     </form>
