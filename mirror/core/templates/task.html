@@ -1,38 +1,37 @@
-<div id="tsk-add-panel" class="w-full p-10 px-16 bg-white rounded-lg shadow-lg hidden">
-    <div class="text-center mb-8">
+<div id="tsk-add-panel" class="w-full p-10 px-16 bg-white rounded-lg shadow-lg hidden flex flex-col items-center">
+    <div class="text-center mb-8 w-full">
         <h1 class="text-3xl font-bold text-gray-900">Create Your Task</h1>
         <p class="text-gray-500 mt-2">Please select the details below to create your task.</p>
     </div>
 
-    <form action="{% url 'add_task' %}" method="POST" id='addTskForm'>
+    <form action="{% url 'add_task' %}" method="POST" id='addTskForm' class="pt-6 w-2/3">
         {% csrf_token %}
-        <div class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+        <div class="space-y-4 text-sm">
+            <div class="grid grid-cols-5 gap-x-8 gap-y-4">
 
-                <div class="flex flex-col py-3">
+                <div class="col-span-2 flex flex-col pr-10">
                     <label for="sample" class="text-sm font-medium text-gray-700">Sample</label>
-                    <select id="sample" name="sample" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700">
+                    <select id="sample" name="sample" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required>
                                     <option value="">Please select a Sample</option>
                                     {% for item in samples %}
                                         <option value="{{ item.id }}">{{ item.name }}</option>
                                     {% endfor %}
                     </select>
                 </div>
-                <div class="flex flex-col py-3">
-                    <!-- Reserved -->
-                </div>
-                <div class="flex flex-col py-3">
+                <div class="col-span-3 flex flex-col pr-10"></div>
+                <div class="col-span-2 flex flex-col pr-10">
                     <label for="contact" class="text-sm font-medium text-gray-700">Issue Contact</label>
-                    <select id="contact" name="contact" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700">
+                    <select id="contact" name="contact" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required>
                                     <option value="">Please select Contact</option>
                                     {% for item in users %}
                                         <option value="{{ item.id }}">{{ item.name }}</option>
                                     {% endfor %}
                     </select>
                 </div>
-                <div class="md:col-span-2 flex flex-col py-3">
+                <div class="col-span-3 flex flex-col pr-10"></div>
+                <div class="col-span-5 flex flex-col pr-10">
                     <label for="last_name" class="text-sm font-medium text-gray-700">Select a task configuration</label>
-                    <fieldset class="space-y-3 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+                    <fieldset class="space-y-3 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4" data-required>
                         <legend class="sr-only">Task Category</legend>
 
                           <div class="flex flex-col">
@@ -69,7 +68,7 @@
                           </div>
                     </fieldset>
                 </div>
-                <div class="flex flex-col py-3">
+                <div class="col-span-2 flex flex-col pr-10">
                     <label for="image" class="text-sm font-medium text-gray-700">OS Image</label>
                     <select id="image" name="image" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700">
                                     <option value="">Please select an OS image</option>
@@ -78,24 +77,25 @@
                                     {% endfor %}
                     </select>
                 </div>
-                <div class="md:col-span-2 flex flex-col py-3">
-                    <label for="testcases" class="text-sm font-medium text-gray-700">Select TestCases</label>
+                <div class="col-span-3 flex flex-col pr-10"></div>
+                <div class="col-span-2 flex flex-col pr-10">
+                    <label for="testcases" class="text-sm font-medium text-gray-700" data-required>Select TestCases</label>
                     <div class="py-4">
                         {% for item in testcases %}
                           <label for="{{ item.id }}" class="flex items-center cursor-pointer select-none py-2">
-                            <input type="checkbox" name="testcases" id="{{ item.id }}" value="{{ item.id }}" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
+                            <input type="checkbox" name="testcases" id="{{ item.id }}" value="{{ item.id }}" class="form-checkbox text-indigo-600 rounded">
                             <span class="ml-2 text-gray-700">{{ item.name }}</span>
                           </label>
                         {% endfor %}
                     </div>
-                </div>          
-
+                </div>
+                <div class="col-span-3 flex flex-col pr-10"></div>
             </div>
         </div>
 
-        <div class="mt-8 items-center text-center">
+        <div class="mt-8 items-center text-center text-sm">
             <button type="submit" id="submit-add-tsk-form" data-action="submitAddTskForm" class="action-btn bg-blue-500 text-white px-6 py-2 rounded-lg font-medium shadow-md hover:bg-blue-600 transition-colors duration-200">Create</button>
-            <a id="cancel-add-tsk" data-action="hideAddTskPanel" class="action-btn text-gray-400 ml-auto p-20 transition hover:text-blue-700 cursor-pointer transition-colors duration-200">Cancel</a>
+            <a id="cancel-add-tsk" data-action="hideAddTskPanel" class="action-btn text-gray-400 ml-auto px-20 transition hover:text-blue-700 cursor-pointer transition-colors duration-200">Cancel</a>
         </div>
 
     </form>
