@@ -14,13 +14,13 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-grey-200 whitespace-nowrap">
                     {% for item in testcase_list %}
-                    	<tr class="bg-gray-50">
-            			    <td class="bg-white  px-4 py-2">#{{ item.id }}</td>
-            			    <td class="bg-white  px-4 py-2">{{ item.number }}</td>
-            			    <td class="bg-white  px-4 py-2">{{ item.case_name }}</td>
-            			    <td class="bg-white  px-4 py-2">{{ item.description }}</td>
-            			    <td class="bg-white  px-4 py-2">{{ item.steps }}</td>
-            			    <td class="bg-white  px-4 py-2">
+                    	<tr class="bg-gray-50 text-xs">
+            			    <td class="bg-white px-4 py-2">#{{ item.id }}</td>
+            			    <td class="bg-white px-4 py-2">{{ item.number }}</td>
+            			    <td class="bg-white px-4 py-2">{{ item.case_name }}</td>
+            			    <td class="bg-white px-4 py-2">{{ item.description }}</td>
+            			    <td class="bg-white px-4 py-2">{{ item.steps }}</td>
+            			    <td class="bg-white px-4 py-2">
             				<span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">{{ item.version }}</span>
             			    </td>
                         </tr>
