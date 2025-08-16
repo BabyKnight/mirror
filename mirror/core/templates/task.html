@@ -1,3 +1,4 @@
+{% load static %}
 <div id="tsk-add-panel" class="w-full p-10 px-16 bg-white rounded-lg shadow-lg hidden flex flex-col items-center">
     <div class="text-center mb-8 w-full">
         <h1 class="text-3xl font-bold text-gray-900">Create Your Task</h1>
@@ -140,7 +141,6 @@
                         {% elif item.type == "f" %}
                             <span class="bg-green-500 w-6 h-6 text-white text-sm flex items-center justify-center rounded-full">F</span>
                         {% endif %}
-                        <span class="bg-gray-300 w-6 h-6 text-gray-700 text-sm flex items-center justify-center rounded-full">+</span>
                     </div>
                 </td>
                 <td class="bg-white px-4 py-2">
@@ -148,19 +148,19 @@
                     <span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">{{ item.kernel_ver }}</span>
                 </td>
                 <td class="bg-white px-4 py-2">
-                    {% if item.st == 'p' %}
+                    {% if item.st == '11' %}
                         <span class="w-4 h-4 bg-yellow-500 block rounded-full"></span>
-                    {% elif item.st == 'r' %}
+                    {% elif item.st == '12' %}
                         <span class="w-4 h-4 bg-red-500 block rounded-full"></span>
-                    {% elif item.st == 'c' %}
+                    {% elif item.st == '13' %}
                         <span class="w-4 h-4 bg-green-500 block rounded-full"></span>
-                    {% elif item.st == 'u' %}
+                    {% elif item.st == '00' %}
                         <span class="w-4 h-4 bg-gray-200 block rounded-full"></span>
                     {% endif %}
                 </td>
                 <td class="bg-white px-4 py-2">
                     <div class="flex items-center">
-                        <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full">
+                        <img src="{% static 'core/img/avatar_default.png' %}" class="w-6 h-6 rounded-full">
                         <div class="ml-4">
                             <p class="font-semibold">{{ item.trigger_by }}</p>
                             <p class="text-sm text-gray-500">{{ item.trigger_at }}</p>
