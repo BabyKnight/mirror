@@ -226,16 +226,29 @@
                             if(url == '/index/task/'){
                                 // add function to listen radio change
                                 const taskCatRadio = document.querySelectorAll('input[name="taskCategory"]')
+                                const installLabel = document.getElementsByClassName('tsk-cat-label-i')[0]
+                                const testLabel = document.getElementsByClassName('tsk-cat-label-t')[0]
+                                const combLabel = document.getElementsByClassName('tsk-cat-label-c')[0]
                                 taskCatRadio.forEach(radio => {
                                     radio.addEventListener('change', () => {
                                         if (radio.checked) {
-                                            if ( radio.id === "installOnly" || radio.id === "combination"){
+                                            if ( radio.id === "installOnly"){
+                                                document.getElementById('image').disabled = false
+                                            }
+                                            else if ( radio.id === "combination"){
                                                 document.getElementById('image').disabled = false
                                             }
                                             else{
                                                 document.getElementById('image').selectedIndex = 0
                                                 document.getElementById('image').disabled = true
                                             }
+
+                                            taskCatRadio.forEach(i => {
+                                                i.closest('label').classList.remove('border-blue-700')
+                                                i.closest('label').classList.add('border-grey-300')
+                                            });
+                                            radio.closest('label').classList.remove('border-grey-300')
+                                            radio.closest('label').classList.add('border-blue-700')
                                         }
                                     });
                                 });
