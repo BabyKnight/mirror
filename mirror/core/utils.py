@@ -265,6 +265,170 @@ def get_testcase_data(tc_id=None):
     return res
 
 
+def get_sample_trends():
+    """
+    Get Sample trend comparing with last month
+    """
+    now = datetime.now(timezone.utc)
+
+    # total samples by month
+    start_of_this_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    start_of_last_month = (start_of_this_month - timedelta(days=1)).replace(day=1)
+
+    total_sample_this_month = Sample.objects.filter(
+                time_created__gte=start_of_this_month,
+                time_created__lt=now
+            ).count()
+    total_sample_last_month = Sample.objects.filter(
+            time_created__gte=start_of_last_month,
+            time_created__lt=start_of_this_month
+            ).count()
+
+    total_sample = Sample.objects.count()
+
+    if total_sample_last_month == 0:
+        delta = total_sample_this_month
+    else:
+        delta = total_sample_this_month / total_sample_last_month
+
+    sample_trend = {
+                'title': 'Total Sample',
+                'data': total_sample,
+                'delta': f"{delta:.2%}",
+                'moment': 'Since last month',
+            }
+    return sample_trend
+
+
+def get_image_trends():
+    """
+    Get image trend comparing with last week
+    """
+    now = datetime.now(timezone.utc)
+
+    start_of_week = now - timedelta(days=now.weekday())
+    start_of_this_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    start_of_last_week = start_of_this_week - timedelta(days=7)
+    end_of_last_week = start_of_this_week - timedelta(seconds=1)
+
+    total_image_this_week = Image.objects.filter(
+                release_date__gte=start_of_this_week,
+                release_date__lt=now
+            ).count()
+
+    total_image_last_week = Image.objects.filter(
+                release_date__gte=start_of_last_week,
+                release_date__lt=end_of_last_week
+            ).count()
+    total_image = Image.objects.count()
+
+    if total_image_last_week == 0:
+        delta = total_image_this_week
+    else:
+        delta = total_image_this_week / total_image_last_week
+
+    image_trend = {
+                'title': 'Image Release',
+                'data': total_image,
+                'delta': f"{delta:.2%}",
+                'moment': 'Since last week',
+            }
+    return image_trend
+
+
+def get_task_trends():
+    """
+    Get task trend comparing with last month
+    """
+    now = datetime.now(timezone.utc)
+    start_of_this_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    start_of_last_month = (start_of_this_month - timedelta(days=1)).replace(day=1)
+
+    total_task_this_month = Task.objects.filter(
+                time_trigger__gte=start_of_this_month,
+                time_trigger__lt=now
+            ).count()
+
+    total_task_last_month = Task.objects.filter(
+                time_trigger__gte=start_of_last_month,
+                time_trigger__lt=start_of_this_month
+            ).count()
+    total_task = Task.objects.count()
+
+    if total_task_last_month == 0:
+        delta = total_task_this_month
+    else:
+        delta = total_task_this_month / total_task_last_month
+
+    task_trend = {
+                'title': 'Total Task',
+                'data': total_task,
+                'delta': f"{delta:.2%}",
+                'moment': 'Since last month'
+            }
+    return task_trend
+
+
+def get_tc_fr_trends():
+    """
+    Get task failure rate trend comparing with last month
+    """
+    now = datetime.now(timezone.utc)
+    start_of_this_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    start_of_last_month = (start_of_this_month - timedelta(days=1)).replace(day=1)
+
+    total_failed_task_this_month = Task.objects.filter(
+            result=False,
+            time_trigger__gte=start_of_this_month,
+            time_trigger__lt=now
+        ).count()
+
+    total_failed_task_last_month = Task.objects.filter(
+            result=False,
+            time_trigger__gte=start_of_last_month,
+            time_trigger__lt=start_of_this_month
+        ).count()
+    total_failed = Task.objects.filter(result=False).count()
+
+    total_task = Task.objects.count()
+    total_task_this_month = Task.objects.filter(
+            time_trigger__gte=start_of_this_month,
+            time_trigger__lt=now
+        ).count()
+    total_task_last_month = Task.objects.filter(
+            time_trigger__gte=start_of_last_month,
+            time_trigger__lt=start_of_this_month
+        ).count()
+
+    if total_task_last_month == 0:
+        fr_last_month = 0
+    else:
+        fr_last_month = total_failed_task_last_month / total_task_last_month
+
+
+    if total_task_this_month == 0:
+        fr_this_month = 0
+    else:
+        fr_this_month = total_failed_task_this_month / total_task_this_month
+
+    if total_task == 0:
+        fr_all = 0
+    else:
+        fr_all = total_failed / total_task
+
+    delta = fr_this_month - fr_last_month
+
+    fr_trend = {
+                'title':'Task Failure Rate',
+                'data': f"{fr_all:.2%}",
+                'delta': f"{delta:.2%}",
+                'moment': 'Since last month',
+            }
+
+    return fr_trend
+
+
 def update_sample_status(spl_id, stat):
     """
     Method to update the sample status

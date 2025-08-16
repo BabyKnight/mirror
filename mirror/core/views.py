@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from .models import Sample, Image, Task, TestCase, Platform, UserProfile
-from .utils import get_chart_data
+from .utils import get_chart_data, get_sample_trends, get_image_trends, get_task_trends, get_tc_fr_trends
 from datetime import datetime, timezone, timedelta
 from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth, TruncDate
@@ -19,97 +19,10 @@ def index(request):
 
     now = datetime.now(timezone.utc)
 
-    # total samples by month
-    start_of_this_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    start_of_last_month = (start_of_this_month - timedelta(days=1)).replace(day=1)
-
-    total_sample_this_month = Sample.objects.filter(
-                time_created__gte=start_of_this_month,
-                time_created__lt=now
-            ).count()
-
-    total_sample_last_month = Sample.objects.filter(
-                time_created__gte=start_of_last_month,
-                time_created__lt=start_of_this_month
-            ).count()
-    total_sample_delta = total_sample_this_month - total_sample_last_month
-    sample_trend = {
-                'title': 'Total Sample',
-                'data': total_sample_this_month,
-                'delta': total_sample_delta,
-                'moment': 'Since last month',
-            }
-
-    # total image by week
-    start_of_week = now - timedelta(days=now.weekday())
-    start_of_this_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
-
-    start_of_last_week = start_of_this_week - timedelta(days=7)
-    end_of_last_week = start_of_this_week - timedelta(seconds=1)
-
-    total_image_this_week = Image.objects.filter(
-                release_date__gte=start_of_this_week,
-                release_date__lt=now
-            ).count()
-
-    total_image_last_week = Image.objects.filter(
-                release_date__gte=start_of_last_week,
-                release_date__lt=end_of_last_week
-            ).count()
-    total_image_delta = total_image_this_week - total_image_last_week
-    image_trend = {
-                'title': 'Image Release',
-                'data': total_image_this_week,
-                'delta': total_image_delta,
-                'moment': 'Since last week',
-            }
-
-    # total tasks by month
-    total_task_this_month = Task.objects.filter(
-                time_trigger__gte=start_of_this_month,
-                time_trigger__lt=now
-            ).count()
-
-    total_task_last_month = Task.objects.filter(
-                time_trigger__gte=start_of_last_month,
-                time_trigger__lt=start_of_this_month
-            ).count()
-    total_task_delta = total_task_this_month - total_task_last_month
-    task_trend = {
-                'title': 'Total Task',
-                'data': total_task_this_month,
-                'delta': total_task_delta,
-                'moment': 'Since last month'
-            }
-
-    # task failure rate by week
-    total_failed_task_this_month = Task.objects.filter(
-                result=False,
-                time_trigger__gte=start_of_this_month,
-                time_trigger__lt=now
-            ).count()
-
-    total_failed_task_last_month = Task.objects.filter(
-                result=False,
-                time_trigger__gte=start_of_last_month,
-                time_trigger__lt=start_of_this_month
-            ).count()
-    if total_task_last_month == 0:
-        failure_rate_last_month = 0
-    else:
-        failure_rate_last_month = total_failed_task_last_month / total_task_last_month
-
-    if total_task_this_month == 0:
-        failure_rate_this_month = 0
-    else:
-        failure_rate_this_month = total_failed_task_this_month / total_task_this_month
-    failure_rate_delta = round((failure_rate_this_month - failure_rate_last_month), 2)
-    fr_trend = {
-                'title':'Task Failure Rate',
-                'data': round(failure_rate_this_month, 2),
-                'delta': failure_rate_delta,
-                'moment': 'Since last month',
-            }
+    sample_trend = get_sample_trends()
+    image_trend = get_image_trends()
+    task_trend = get_task_trends()
+    fr_trend = get_tc_fr_trends()
 
     # recent activity
     all_task = Task.objects.order_by('-time_trigger')[:5]
@@ -140,97 +53,10 @@ def index(request):
 def dashboard(request):
     now = datetime.now(timezone.utc)
 
-    # total samples by month
-    start_of_this_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    start_of_last_month = (start_of_this_month - timedelta(days=1)).replace(day=1)
-
-    total_sample_this_month = Sample.objects.filter(
-                time_created__gte=start_of_this_month,
-                time_created__lt=now
-            ).count()
-
-    total_sample_last_month = Sample.objects.filter(
-                time_created__gte=start_of_last_month,
-                time_created__lt=start_of_this_month
-            ).count()
-    total_sample_delta = total_sample_this_month - total_sample_last_month
-    sample_trend = {
-                'title': 'Total Sample',
-                'data': total_sample_this_month,
-                'delta': total_sample_delta,
-                'moment': 'Since last month',
-            }
-
-    # total image by week
-    start_of_week = now - timedelta(days=now.weekday())
-    start_of_this_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
-
-    start_of_last_week = start_of_this_week - timedelta(days=7)
-    end_of_last_week = start_of_this_week - timedelta(seconds=1)
-
-    total_image_this_week = Image.objects.filter(
-                release_date__gte=start_of_this_week,
-                release_date__lt=now
-            ).count()
-
-    total_image_last_week = Image.objects.filter(
-                release_date__gte=start_of_last_week,
-                release_date__lt=end_of_last_week
-            ).count()
-    total_image_delta = total_image_this_week - total_image_last_week
-    image_trend = {
-                'title': 'Image Release',
-                'data': total_image_this_week,
-                'delta': total_image_delta,
-                'moment': 'Since last week',
-            }
-
-    # total tasks by month
-    total_task_this_month = Task.objects.filter(
-                time_trigger__gte=start_of_this_month,
-                time_trigger__lt=now
-            ).count()
-
-    total_task_last_month = Task.objects.filter(
-                time_trigger__gte=start_of_last_month,
-                time_trigger__lt=start_of_this_month
-            ).count()
-    total_task_delta = total_task_this_month - total_task_last_month
-    task_trend = {
-                'title': 'Total Task',
-                'data': total_task_this_month,
-                'delta': total_task_delta,
-                'moment': 'Since last month'
-            }
-
-    # task failure rate by week
-    total_failed_task_this_month = Task.objects.filter(
-                result=False,
-                time_trigger__gte=start_of_this_month,
-                time_trigger__lt=now
-            ).count()
-
-    total_failed_task_last_month = Task.objects.filter(
-                result=False,
-                time_trigger__gte=start_of_last_month,
-                time_trigger__lt=start_of_this_month
-            ).count()
-    if total_task_last_month == 0:
-        failure_rate_last_month = 0
-    else:
-        failure_rate_last_month = total_failed_task_last_month / total_task_last_month
-
-    if total_task_this_month == 0:
-        failure_rate_this_month = 0
-    else:
-        failure_rate_this_month = total_failed_task_this_month / total_task_this_month
-    failure_rate_delta = round((failure_rate_this_month - failure_rate_last_month), 2)
-    fr_trend = {
-                'title':'Task Failure Rate',
-                'data': round(failure_rate_this_month, 2),
-                'delta': failure_rate_delta,
-                'moment': 'Since last month',
-            }
+    sample_trend = get_sample_trends()
+    image_trend = get_image_trends()
+    task_trend = get_task_trends()
+    fr_trend = get_tc_fr_trends()
 
     # recent activity
     all_task = Task.objects.order_by('-time_trigger')[:5]
