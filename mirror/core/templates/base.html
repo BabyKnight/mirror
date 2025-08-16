@@ -223,6 +223,23 @@
                                 // dynamically render the charts in dashboard
                                 renderChartsInDashboard()
                             }
+                            if(url == '/index/task/'){
+                                // add function to listen radio change
+                                const taskCatRadio = document.querySelectorAll('input[name="taskCategory"]')
+                                taskCatRadio.forEach(radio => {
+                                    radio.addEventListener('change', () => {
+                                        if (radio.checked) {
+                                            if ( radio.id === "installOnly" || radio.id === "combination"){
+                                                document.getElementById('image').disabled = false
+                                            }
+                                            else{
+                                                document.getElementById('image').selectedIndex = 0
+                                                document.getElementById('image').disabled = true
+                                            }
+                                        }
+                                    });
+                                });
+                            }
                         })
                         .catch(error => {
                             contentDiv.innerHTML = "<p class='text-red-500'>Error loading content. </p>";
@@ -230,96 +247,95 @@
                 });
             });
 
+            contentDiv.addEventListener('click', function(e){
+                const clickedButton = e.target.closest('.action-btn');  
 
-        contentDiv.addEventListener('click', function(e){
-            const clickedButton = e.target.closest('.action-btn');
+                if(clickedButton){
+                    e.preventDefault(); 
 
-            if(clickedButton){
-                e.preventDefault();
+                    const actionEvt = clickedButton.dataset.action;
+                    const actionId = clickedButton.dataset.actionId;    
 
-                const actionEvt = clickedButton.dataset.action;
-                const actionId = clickedButton.dataset.actionId;
+                    if(actionEvt === 'showAddSplPanel'){
+                        const addSplPanel = document.getElementById('spl-add-panel');
+                        const addSplForm = document.getElementById('addSplForm');
+                        addSplForm.reset();
+                        addSplPanel.classList.remove('hidden')
+                    }else if(actionEvt === 'hideAddSplPanel'){
+                        const addSplPanel = document.getElementById('spl-add-panel');
+                        addSplPanel.classList.add('hidden')
+                    }else if(actionEvt === 'submitAddSplForm'){
+                        const addSplForm = document.getElementById('addSplForm');   
+    
 
-                if(actionEvt === 'showAddSplPanel'){
-                    const addSplPanel = document.getElementById('spl-add-panel');
-                    const addSplForm = document.getElementById('addSplForm');
-                    addSplForm.reset();
-                    addSplPanel.classList.remove('hidden')
-                }else if(actionEvt === 'hideAddSplPanel'){
-                    const addSplPanel = document.getElementById('spl-add-panel');
-                    addSplPanel.classList.add('hidden')
-                }else if(actionEvt === 'submitAddSplForm'){
-                    const addSplForm = document.getElementById('addSplForm');
+                        const requiredInputs = addSplForm.querySelectorAll('[data-required]');
+                        let allFieldValid = true
+                        requiredInputs.forEach(input => {
+                            if (input.value.trim() === ''){
+                                input.classList.add('text-red-500');
+                                input.classList.remove('text-grey-700')
+                                allFieldValid = false
+                            }else{
+                                input.classList.remove('text-red-500');
+                                input.classList.add('text-grey-800')
+                            }
+                        });
+                        if (allFieldValid){
+                            const formData = new FormData(addSplForm);      
 
-
-                    const requiredInputs = addSplForm.querySelectorAll('[data-required]');
-                    let allFieldValid = true
-                    requiredInputs.forEach(input => {
-                        if (input.value.trim() === ''){
-                            input.classList.add('text-red-500');
-                            input.classList.remove('text-grey-700')
-                            allFieldValid = false
-                        }else{
-                            input.classList.remove('text-red-500');
-                            input.classList.add('text-grey-800')
+                            const csrfToken = formData.get('csrfmiddlewaretoken');
+                            if(!csrfToken){
+                                alert('csrf token error')
+                            }
+                            fetch(addSplForm.action, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRFToken': csrfToken,
+                                },
+                                body: formData,
+                            })
+                            .then(response =>{
+                                if(response.ok){
+                                    const addSplPanel = document.getElementById('spl-add-panel');
+                                    addSplPanel.classList.add('hidden')
+                                    addSplForm.reset();
+                                }
+                            })
                         }
-                    });
-                    if (allFieldValid){
-                        const formData = new FormData(addSplForm);  
+                    }else if(actionEvt === 'showAddTskPanel'){
+                        const addSplPanel = document.getElementById('tsk-add-panel');
+                        const addSplForm = document.getElementById('addTskForm');
+                        addSplForm.reset();
+                        addSplPanel.classList.remove('hidden')
+                    }else if(actionEvt === 'hideAddTskPanel'){
+                        const addSplPanel = document.getElementById('tsk-add-panel');
+                        addSplPanel.classList.add('hidden')
+                    }else if(actionEvt === 'submitAddTskForm'){
+                        const addTskForm = document.getElementById('addTskForm');
+                        const formData = new FormData(addTskForm);  
 
                         const csrfToken = formData.get('csrfmiddlewaretoken');
                         if(!csrfToken){
                             alert('csrf token error')
                         }
-                        fetch(addSplForm.action, {
+                        fetch(addTskForm.action, {
                             method: 'POST',
                             headers: {
-                                'X-CSRFToken': csrfToken,
+                                'X-CSRFToken': csrfToken,   
+
                             },
                             body: formData,
                         })
                         .then(response =>{
                             if(response.ok){
-                                const addSplPanel = document.getElementById('spl-add-panel');
-                                addSplPanel.classList.add('hidden')
-                                addSplForm.reset();
+                                const addTskPanel = document.getElementById('tsk-add-panel');
+                                addTskPanel.classList.add('hidden')
+                                addTskForm.reset();
                             }
                         })
                     }
-                }else if(actionEvt === 'showAddTskPanel'){
-                    const addSplPanel = document.getElementById('tsk-add-panel');
-                    const addSplForm = document.getElementById('addTskForm');
-                    addSplForm.reset();
-                    addSplPanel.classList.remove('hidden')
-                }else if(actionEvt === 'hideAddTskPanel'){
-                    const addSplPanel = document.getElementById('tsk-add-panel');
-                    addSplPanel.classList.add('hidden')
-                }else if(actionEvt === 'submitAddTskForm'){
-                    const addTskForm = document.getElementById('addTskForm');
-                    const formData = new FormData(addTskForm);
-
-                    const csrfToken = formData.get('csrfmiddlewaretoken');
-                    if(!csrfToken){
-                        alert('csrf token error')
-                    }
-                    fetch(addTskForm.action, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': csrfToken,
-
-                        },
-                        body: formData,
-                    })
-                    .then(response =>{
-                        if(response.ok){
-                            const addTskPanel = document.getElementById('tsk-add-panel');
-                            addTskPanel.classList.add('hidden')
-                            addTskForm.reset();
-                        }
-                    })
                 }
-            }
-        })
+            })
 
         });
     </script>
