@@ -143,7 +143,7 @@ def sample(request):
 
 def image(request):
     # search for Images
-    images = Image.objects.all()
+    images = Image.objects.all().order_by('-release_date')
     img_list = []
 
     for i in images:
@@ -169,7 +169,7 @@ def task(request):
 
     now = datetime.now(timezone.utc)
 
-    all_task = Task.objects.all()
+    all_task = Task.objects.all().order_by('-pk')
     for i in all_task:
         tsk = model_to_dict(i)
         tsk['type'] = i.task_category[0]
