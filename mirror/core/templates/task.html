@@ -11,7 +11,7 @@
             <div class="grid grid-cols-5 gap-x-8 gap-y-4">
 
                 <div class="col-span-2 flex flex-col pr-10">
-                    <label for="sample" class="text-sm font-medium text-gray-700">Sample</label>
+                    <label for="sample" class="text-sm font-medium text-gray-700">* Sample</label>
                     <select id="sample" name="sample" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required>
                                     <option value="">Please select a Sample</option>
                                     {% for item in samples %}
@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-span-3 flex flex-col pr-10"></div>
                 <div class="col-span-2 flex flex-col pr-10">
-                    <label for="contact" class="text-sm font-medium text-gray-700">Issue Contact</label>
+                    <label for="contact" class="text-sm font-medium text-gray-700">* Issue Contact</label>
                     <select id="contact" name="contact" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required>
                                     <option value="">Please select Contact</option>
                                     {% for item in users %}
@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-span-3 flex flex-col pr-10"></div>
                 <div class="col-span-5 flex flex-col pr-10">
-                    <label for="last_name" class="text-sm font-medium text-gray-700">Select a task configuration</label>
+                    <label for="last_name" class="text-sm font-medium text-gray-700">* Select a task configuration</label>
                     <fieldset class="space-y-3 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4" data-required>
                         <legend class="sr-only">Task Category</legend>
 
@@ -80,7 +80,7 @@
                 </div>
                 <div class="col-span-3 flex flex-col pr-10"></div>
                 <div class="col-span-2 flex flex-col pr-10">
-                    <label for="testcases" class="text-sm font-medium text-gray-700" data-required>Select TestCases</label>
+                    <label for="testcases" class="text-sm font-medium text-gray-700" data-required>* Select TestCases</label>
                     <div class="py-4">
                         {% for item in testcases %}
                           <label for="{{ item.id }}" class="flex items-center cursor-pointer select-none py-2">
