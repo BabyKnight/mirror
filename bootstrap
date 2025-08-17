@@ -6,22 +6,27 @@ INDEX_URL="http://pypi.doubanio.com/simple/"
 
 function install_sys_pkg()
 {
-		# make sure python3 virtual env is installed
-		echo "Check if python3-venv is installed..."
-		pkg='python3-venv'
+	PACKAGES=(
+		"python3-venv"
+		"nginx"
+	)
+	# make sure depedency is installed
+	for pkg in "${PACKAGES[@]}"; do
+		echo "Check if ${pkg} is installed..."
 		if [ `dpkg -l | grep $pkg | wc -l` -ne 0 ]; then
 				echo "[ INSTALLED ]"
 		else
 				echo "[ NOT INSTALLED ]"
-				sudo apt install python3-venv
+				sudo apt install "${pkg}" -y
 		fi
+	done
 }
 
 
 function get_and_set_env()
 {
 	PROJECT_ROOT_PATH=$(pwd)
-	DJANGO_PROJECT_PATH="$PROJECT_ROOT_PATH/apps"
+	DJANGO_PROJECT_PATH="$PROJECT_ROOT_PATH/config"
 
 	echo "PROJECT_ROOT_PATH is - [ $PROJECT_ROOT_PATH ]"
 	echo "DJANGO_PROJECT_PATH is - [ $DJANGO_PROJECT_PATH ]"
