@@ -178,7 +178,7 @@ def add_sample(request):
             sample.save()
             res = 0
         except Exception as e:
-            raise -2
+            res = -2
     else:
         res = -1
     
@@ -211,10 +211,45 @@ def add_task(request):
                 new_task.testcases.set(tc_list)
 
             new_task.save()
-            res = 1
+            res = 0
         except Exception as e:
-            raise -2
+            res = -2
     else:
         res = -1
 
+    return HttpResponse(res)
+
+
+@csrf_exempt
+def add_image(request):
+    """
+    api for add image
+    """
+    if request.method == "POST":
+        img_name = request.POST.get('name')
+        img_cat = request.POST.get('cat')
+        img_ver = request.POST.get('img_ver')
+        kern_ver = request.POST.get('kern_ver')
+        rel_date = request.POST.get('date')
+        path = request.POST.get('path')
+        size = request.POST.get('size')
+        checksum = request.POST.get('checksum')
+
+        try:
+            new_image = Image.objects.create(
+                image_name=img_name,
+                category=img_cat,
+                image_version=img_ver,
+                kernel_version=kern_ver,
+                release_date=rel_date,
+                file_path=path,
+                file_size=size,
+                sha256_hash=checksum,
+                )
+            new_image.save()
+            res = 0
+        except Exception as e:
+            res = -2
+    else:
+        res = -1
     return HttpResponse(res)
