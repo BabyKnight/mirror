@@ -1,0 +1,106 @@
+
+@font-face {
+    font-family: Poppins;
+    src: url("/static/core/fonts/Poppins-Black.ttf") format('truetype');
+    font-weight: 900;
+    font-style: black;
+}
+@font-face {
+    font-family: Poppins;
+    src: url("/static/core/fonts/Poppins-Bold.ttf") format('truetype');
+    font-weight: 700;
+    font-style: bold;
+}
+@font-face {
+    font-family: Poppins;
+    src: url("/static/core/fonts/Poppins-Light.ttf") format('truetype');
+    font-weight: 300;
+    font-style: light;
+}
+@font-face {
+    font-family: Poppins;
+    src: url("/static/core/fonts/Poppins-Regular.ttf") format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+.light-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: light;
+}
+.regular-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: normal;
+}
+.bold-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+}
+.black-text {
+    font-family: 'Poppins', sans-serif;
+    font-weight: black;
+}
+.nav-link {
+    color: #A1A2A6;
+}
+.nav-link:hover {
+    color: #1F253A;
+    background-color: #F7FAFF;
+    transition: background-color 0.2s easy-in-out;
+}
+.nav-link:hover p {
+    color: #1F253A;
+}
+.nav-act{
+    color: #5E5AFE;
+    background-color: #F2F1FF;
+    background-image: linear-gradient(to right, #F2F1FF, #FFFFFF 20%);
+    background-size: 200% 100%;
+    background-position: left;
+    transition: background-position 0.2s easy-in-out;
+}
+.nav-act p{
+    color: #5E5AFE;
+}
+.nav-deact {
+    color: #A1A2A6;
+}
+.nav-deact p{
+    color: #A1A2A6;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #F7FAFF;
+}
+.c-title {
+    color: #605BDF;
+}
+.content-panel {
+    background-color: #F7FAFF;
+}
+.search-bg {
+    background-color: #F7FAFF;     
+}
+.tr-panel-0{
+    background-color: #3B76EE;
+}
+.tr-panel-1{
+    background-color: #62C7FF;
+}
+.tr-panel-2{
+    background-color: #A66DD4;
+}
+.tr-panel-3{
+    background-color: #6CD4B1;
+}
+.tr-conta:hover{
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 10px 20px rgb(0, 0, 0, 0.15);
+}
+.content-panel{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.content-wrap{
+    flex-grow: 1;
+}
