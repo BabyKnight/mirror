@@ -182,7 +182,8 @@ class Task(models.Model):
         return dict(self.STATUS_CHOICES).get(self.status, '11')
 
     def __str__(self):
-        return "<{}: {}-{}>".format(
+        return "<{} - {}: {}-{}>".format(
+            self.pk,
             self.sample.dpn,
             self.image.category if self.image else 'Unkonwn',
             self.image.image_version if self.image else 'Unkonwn',

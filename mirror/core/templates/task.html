@@ -153,19 +153,19 @@
                 </td>
                 <td class="px-4 py-2 relative group">
                     {% if item.st == '11' %}
-                        <span class="w-4 h-4 bg-yellow-500 block rounded-full cursor-pointer"></span>
+                        <span class="w-4 h-4 bg-yellow-500 block rounded-full cursor-pointer tskSt" tskId="{{ item.id}}"></span>
                         <div class="absolute z-10 left-10 top-2 -translate-y-1/2 ml-2 p-2 bg-white border border-grey-400 text-gray-700 text-xs rounded-lg shadow-lg whitespace-nowrap opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">Pending</div>
                     {% elif item.st == '12' %}
-                        <span class="w-4 h-4 bg-red-500 block rounded-full cursor-pointer"></span>
+                        <span class="w-4 h-4 bg-red-500 block rounded-full cursor-pointer tskSt" tskId="{{ item.id}}"></span>
                         <div class="absolute z-10 left-10 top-2 -translate-y-1/2 ml-2 p-2 bg-white border border-grey-400 text-gray-700 text-xs rounded-lg shadow-lg whitespace-nowrap opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">Running</div>
                     {% elif item.st == '13' %}
-                        <span class="w-4 h-4 bg-green-500 block rounded-full cursor-pointer"></span>
+                        <span class="w-4 h-4 bg-green-500 block rounded-full cursor-pointer tskSt" tskId="{{ item.id}}"></span>
                         <div class="absolute z-10 left-10 top-2 -translate-y-1/2 ml-2 p-2 bg-white border border-grey-400 text-gray-700 text-xs rounded-lg shadow-lg whitespace-nowrap opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">Complete</div>
                     {% elif item.st == '14' %}
-                        <span class="w-4 h-4 bg-gray-600 block rounded-full cursor-pointer"></span>
+                        <span class="w-4 h-4 bg-gray-600 block rounded-full cursor-pointer tskSt" tskId="{{ item.id}}"></span>
                         <div class="absolute z-10 left-10 top-2 -translate-y-1/2 ml-2 p-2 bg-white border border-grey-400 text-gray-700 text-xs rounded-lg shadow-lg whitespace-nowrap opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">Cancelled</div>
                     {% elif item.st == '00' %}
-                        <span class="w-4 h-4 bg-gray-200 block rounded-full cursor-pointer"></span>
+                        <span class="w-4 h-4 bg-gray-200 block rounded-full cursor-pointer tskSt" tskId="{{ item.id}}"></span>
                         <div class="absolute z-10 left-10 top-2 -translate-y-1/2 ml-2 p-2 bg-white border border-grey-400 text-gray-700 text-xs rounded-lg shadow-lg whitespace-nowrap opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">Unknown</div>
                     {% endif %}
                 </td>

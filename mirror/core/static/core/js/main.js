@@ -15,6 +15,74 @@ function reloadContent(url){
         })
 }
 
+function clearAllSt(element){
+	element.classList.forEach( cls => {
+		if (/^bg-/.test(cls)){
+			element.classList.remove(cls);
+		}
+	})
+}
+
+function refreshSplSt(){
+	const stElems = document.getElementsByClassName('splSt')
+
+	for (const stEl of stElems){
+		splId = stEl.getAttribute('splId')
+		url = `/api/search?q=spl&id=${splId}`
+		fetch(url)
+       		.then(response =>{
+           		if (!response.ok){
+               		throw new Error('Network response was not ok');
+           		}
+           		return response.json();
+       		})
+       		.then(data => {
+           		const st = data['data']['status_code']
+           		clearAllSt(stEl)
+           		if (st == '00') {
+           			stEl.classList.add('bg-gray-300')
+           		}else if(st == '10'){
+           			stEl.classList.add('bg-green-300')
+           		}else if(st == '11' || st == '12' || st == '13'){
+           			stEl.classList.add('bg-red-500')
+           		}else{
+           			stEl.classList.add('bg-yellow-500')
+           		}
+        	})
+	}
+}
+
+function refreshTskSt(){
+	const stElems = document.getElementsByClassName('tskSt')
+
+	for (const stEl of stElems){
+		tskId = stEl.getAttribute('tskId')
+		url = `/api/search?q=tsk&id=${tskId}`
+		fetch(url)
+       		.then(response =>{
+           		if (!response.ok){
+               		throw new Error('Network response was not ok');
+           		}
+           		return response.json();
+       		})
+       		.then(data => {
+           		const st = data['data']['task_status_code']
+           		clearAllSt(stEl)
+
+           		if (st == '11') {
+           			stEl.classList.add('bg-yellow-500')
+           		}else if(st == '12'){
+           			stEl.classList.add('bg-red-500')
+           		}else if(st == '13'){
+           			stEl.classList.add('bg-green-500')
+           		}else if(st == '14'){
+           			stEl.classList.add('bg-gray-600')
+           		}else{
+           			stEl.classList.add('bg-gray-200')
+           		}
+        	})
+	}
+}
 
 document.addEventListener('DOMContentLoaded', function(){
     const links = document.querySelectorAll('.nav-link');
@@ -72,6 +140,10 @@ document.addEventListener('DOMContentLoaded', function(){
                                 }
                             });
                         });
+						setInterval(refreshTskSt, 10000);
+                    }
+                    if(url == '/index/sample/'){
+                    	setInterval(refreshSplSt, 10000);
                     }
                 })
                 .catch(error => {
@@ -150,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 })
                 .then(response => response.text())
                 .then(data => {
-                    console.log('The action of task cancellation is ', data);
+                    reloadContent('/index/task/')
                 })
             }else if(actionEvt === 'submitAddTskForm'){
                 const addTskForm = document.getElementById('addTskForm');
@@ -173,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function(){
                         const addTskPanel = document.getElementById('tsk-add-panel');
                         addTskPanel.classList.add('hidden')
                         addTskForm.reset();
+                        reloadContent('/index/task/')
                     }
                 })
             }
