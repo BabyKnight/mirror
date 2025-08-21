@@ -204,6 +204,8 @@ def task(request):
         sample_list.append({
             'id': i.pk,
             'name': i.dpn,
+            'ip': i.ip,
+            'remark': i.remark,
             })
 
     users = UserProfile.objects.all()

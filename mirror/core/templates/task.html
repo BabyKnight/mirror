@@ -10,16 +10,19 @@
         <div class="space-y-4 text-sm">
             <div class="grid grid-cols-5 gap-x-8 gap-y-4">
 
-                <div class="col-span-2 flex flex-col pr-10">
+                <div class="col-span-3 flex flex-col pr-10">
                     <label for="sample" class="text-sm font-medium text-gray-700">* Sample</label>
                     <select id="sample" name="sample" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required>
                                     <option value="">Please select a Sample</option>
                                     {% for item in samples %}
-                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                        <option value="{{ item.id }}">
+                                            <span>{{ item.name }} - </span>
+                                            <span class="text-red-500 text-xs pl-10">< {{ item.ip }} ></span>
+                                        </option>
                                     {% endfor %}
                     </select>
                 </div>
-                <div class="col-span-3 flex flex-col pr-10"></div>
+                <div class="col-span-2 flex flex-col pr-10"></div>
                 <div class="col-span-2 flex flex-col pr-10">
                     <label for="contact" class="text-sm font-medium text-gray-700">* Issue Contact</label>
                     <select id="contact" name="contact" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required>
@@ -179,7 +182,7 @@
                         </div>
                     </div>
                 </td>
-                <td class="px-4 py-2 flex item-center justify-center cursor-pointer hover:text-blue-500 ">
+                <td class="px-4 py-2 flex item-center justify-start cursor-pointer hover:text-blue-500 ">
                     {% if item.st == '13' %}
                     <span class="text-grey-500 text-sm font-xs mt-2 underline">logs</span>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mt-2 ml-2">
