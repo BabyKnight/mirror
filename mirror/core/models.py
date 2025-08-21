@@ -136,6 +136,7 @@ class TestCase(models.Model):
     case_name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
     script = models.CharField(max_length=80)
+    required_log = models.CharField(max_length=200, null=True, blank=True)
     is_remote = models.BooleanField(default=True)
     is_root_required = models.BooleanField(default=False)
     version = models.CharField(max_length=20)

@@ -8,11 +8,11 @@
             <p class="text-white">{{ item.title }}</p>
             <h2 class="text-2xl font-bold text-white my-3">{{ item.data }}</h2>
             <span class="text-white text-xs inline-flex items-center">
-            {% if item.delta > 0 %}
+            {% if item.data > 0 %}
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="size-6 h-6 w-6 mr-2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
                 </svg>
-            {% elif item.delta == 0 %}
+            {% elif item.data == 0 %}
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="size-6 h-6 w-6 mr-2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3" />
                 </svg>

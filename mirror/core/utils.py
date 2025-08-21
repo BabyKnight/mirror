@@ -421,7 +421,7 @@ def get_tc_fr_trends():
 
     fr_trend = {
                 'title':'Task Failure Rate',
-                'data': f"{fr_all:.2%}",
+                'data': fr_all,
                 'delta': f"{delta:.2%}",
                 'moment': 'Since last month',
             }
