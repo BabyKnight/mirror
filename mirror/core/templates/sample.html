@@ -96,20 +96,24 @@
         </thead>
         <tbody class="bg-white divide-y divide-grey-200 whitespace-nowrap">
             {% for item in sample_list %}
-                <tr class="bg-gray-50 text-xs">
-                    <td class="bg-white px-4 py-4">#{{ item.id}}</td>
-                    <td class="bg-white px-4 py-4">{{ item.plat_name }}</td>
-                    <td class="bg-white px-4 py-4">{{ item.dpn }}</td>
-                    <td class="bg-white px-4 py-4">
+                {% if rfna == "0" and forloop.first %}
+                <tr class="bg-green-100 text-xs">
+                {% else %}
+                <tr class="bg-white text-xs">
+                {% endif %}
+                    <td class="px-4 py-4">#{{ item.id}}</td>
+                    <td class="px-4 py-4">{{ item.plat_name }}</td>
+                    <td class="px-4 py-4">{{ item.dpn }}</td>
+                    <td class="px-4 py-4">
                         <span class="bg-gray-200 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-900 dark:text-gray-300">
                             0x{{ item.ssid }}
                         </span>
                     </td>
-                    <td class="bg-white px-4 py-4">{{ item.service_tag }}</td>
-                    <td class="bg-white px-4 py-4">{{ item.ip }}</td>
-                    <td class="bg-white px-4 py-4">{{ item.owner }}</td>
-                    <td class="bg-white px-4 py-4">{{ item.current_user }}</td>
-                    <td class="bg-white px-4 py-4 relative group">
+                    <td class="px-4 py-4">{{ item.service_tag }}</td>
+                    <td class="px-4 py-4">{{ item.ip }}</td>
+                    <td class="px-4 py-4">{{ item.owner }}</td>
+                    <td class="px-4 py-4">{{ item.current_user }}</td>
+                    <td class="px-4 py-4 relative group">
                         {% if item.st == 'OFF' %}
                             <span class="w-4 h-4 bg-gray-300 block rounded-full cursor-pointer"></span>
                             <div class="absolute z-10 left-10 top-2 -translate-y-1/2 ml-2 p-2 bg-white border border-grey-400 text-gray-700 text-xs rounded-lg shadow-lg whitespace-nowrap opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">Offline</div>

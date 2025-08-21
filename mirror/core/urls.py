@@ -6,13 +6,13 @@ urlpatterns = [
     # to be updated to direct to the home page as default
     path('', index),
     
-    path('index/', index),
-    path('index/dashboard/', dashboard),
-    path('index/sample/', sample),
-    path('index/image/', image),
-    path('index/task/', task),
-    path('index/testcase/', testcase),
-    path('index/platform/', platform),
+    re_path(r'^index/?$', index),
+    re_path(r'^index/dashboard/?$', dashboard),
+    re_path(r'^index/sample/?$', sample),
+    re_path(r'^index/task/?$', task),
+    re_path(r'^index/testcase/?$', testcase),
+    re_path(r'^index/platform/?$', platform),
+    re_path(r'^index/image/?$', image),
     
     # API
     re_path(r'^api/ping/?$', ping),

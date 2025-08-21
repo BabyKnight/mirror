@@ -84,9 +84,6 @@ class Sample(models.Model):
     time_created = models.DateTimeField(default=timezone.now)
     last_update = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        unique_together = ('service_tag', 'ssid')
-
     @property
     def status_desc(self):
         return self.STATUS_CHOISE.get(self.status, '20')

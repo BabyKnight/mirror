@@ -85,6 +85,8 @@ def dashboard(request):
 
 
 def sample(request):
+    refresh_for_new_add = request.GET.get('rfna')
+
     samples = Sample.objects.all()
     sample_list = []
     plat_info_list = []
@@ -112,6 +114,13 @@ def sample(request):
         sp['plat_name'] = i.platform.name
         sample_list.append(sp)
 
+    # for adding sample and refresh purpose, move the latest one to the top
+    is_rfna = ""
+    if refresh_for_new_add:
+        latest_spl = sample_list.pop()
+        sample_list.insert(0, latest_spl)
+        is_rfna = "0"
+
     platforms = Platform.objects.all()
 
     for i in platforms:
@@ -132,6 +141,7 @@ def sample(request):
             })
 
     context = {
+        "rfna": is_rfna,
         "sample_list": sample_list,
         "platform_list": plat_info_list,
         "user_list": user_list,

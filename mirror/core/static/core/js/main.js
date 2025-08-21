@@ -1,5 +1,21 @@
 //main js
 
+function reloadContent(url){
+	const contentDiv = document.getElementById('main-content');
+
+    fetch(url)
+       .then(response =>{
+           if (!response.ok){
+               throw new Error('Network response was not ok');
+           }
+           return response.text();
+       })
+       .then(html => {
+           contentDiv.innerHTML = html;
+        })
+}
+
+
 document.addEventListener('DOMContentLoaded', function(){
     const links = document.querySelectorAll('.nav-link');
     const contentDiv = document.getElementById('main-content');
@@ -114,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function(){
                             const addSplPanel = document.getElementById('spl-add-panel');
                             addSplPanel.classList.add('hidden')
                             addSplForm.reset();
+                            reloadContent('/index/sample?rfna=1')
                         }
                     })
                 }
