@@ -22,6 +22,7 @@ urlpatterns = [
     re_path(r'^api/update_status$', update_status),
     re_path(r'^api/sample/add/?$', add_sample, name="add_sample"),
     re_path(r'^api/task/add/?$', add_task, name="add_task"),
+    re_path(r'^api/task/cancel$', cancel_task, name="cancel_task"),
     re_path(r'^api/image/add/?$', add_image, name="add_image"),
 
     # api for User & User Profile

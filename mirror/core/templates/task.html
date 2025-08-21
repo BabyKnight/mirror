@@ -109,7 +109,7 @@
         <h2 class="text-xl font-semibold mb-4">Top Tasks</h2>
         <a  id="btn-show-tsk-add-form" data-action="showAddTskPanel" class="action-btn text-blue-400 transition hover:text-blue-700 cursor-pointer transition-colors duration-200">Schedule a new task ></a>
     </div>
-    <table class="min-w-full divide-y divide-grey-200 text-left">
+    <table class="table-fixed min-w-full divide-y divide-grey-200 text-left">
         <thead class="bg-grey-100 whitespace-nowrap">
             <tr class="bg-grey-100 text-sm">
                 <th class="px-4 py-2 uppercase tracking-wider font-normal">ID</th>
@@ -118,6 +118,7 @@
                 <th class="px-4 py-2 uppercase tracking-wider font-normal">Image/Kernel</th>
                 <th class="px-4 py-2 uppercase tracking-wider font-normal">Status</th>
                 <th class="px-4 py-2 uppercase tracking-wider font-normal">Trigger</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal w-[10px]"></th>
             </tr>
         </thead>
         <tbody class="bg-white divide-y divide-grey-200 whitespace-nowrap">
@@ -160,6 +161,9 @@
                     {% elif item.st == '13' %}
                         <span class="w-4 h-4 bg-green-500 block rounded-full cursor-pointer"></span>
                         <div class="absolute z-10 left-10 top-2 -translate-y-1/2 ml-2 p-2 bg-white border border-grey-400 text-gray-700 text-xs rounded-lg shadow-lg whitespace-nowrap opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">Complete</div>
+                    {% elif item.st == '14' %}
+                        <span class="w-4 h-4 bg-gray-600 block rounded-full cursor-pointer"></span>
+                        <div class="absolute z-10 left-10 top-2 -translate-y-1/2 ml-2 p-2 bg-white border border-grey-400 text-gray-700 text-xs rounded-lg shadow-lg whitespace-nowrap opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">Cancelled</div>
                     {% elif item.st == '00' %}
                         <span class="w-4 h-4 bg-gray-200 block rounded-full cursor-pointer"></span>
                         <div class="absolute z-10 left-10 top-2 -translate-y-1/2 ml-2 p-2 bg-white border border-grey-400 text-gray-700 text-xs rounded-lg shadow-lg whitespace-nowrap opacity-0 transition-all duration-300 group-hover:visible group-hover:opacity-100">Unknown</div>
@@ -173,6 +177,11 @@
                             <p class="text-sm text-gray-500">{{ item.trigger_at }}</p>
                         </div>
                     </div>
+                </td>
+                <td class="bg-white px-4 py-2 w-[10px] whitespace-nowrap">
+                    {% if item.st == '11' %}
+                    <span class="action-btn inline-block px-4 py-2 rounded-full bg-grey-400 text-blue-500 cursor-pointer hover:bg-red-500 hover:text-white hover:border hover: border-grey-400 transition-colors" value="{{ item.id }}" id="btn-cancel-tsk" data-action="cancelTask" >Cancel</span>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}

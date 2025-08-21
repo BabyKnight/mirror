@@ -323,6 +323,16 @@
                     }else if(actionEvt === 'hideAddTskPanel'){
                         const addSplPanel = document.getElementById('tsk-add-panel');
                         addSplPanel.classList.add('hidden')
+                    }else if(actionEvt === 'cancelTask'){
+                        tskId = clickedButton.getAttribute('value')
+                        url = `/api/task/cancel?id=${tskId}`
+                        fetch(url, {
+                            method: "GET"
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log('The action of task cancellation is ', data);
+                        })
                     }else if(actionEvt === 'submitAddTskForm'){
                         const addTskForm = document.getElementById('addTskForm');
                         const formData = new FormData(addTskForm);  

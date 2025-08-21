@@ -165,13 +165,14 @@ class Task(models.Model):
         ('11', 'Pending'),
         ('12', 'Running'),
         ('13', 'Complete'),
+        ('14', 'Cancelled'),
         ('00', 'Unkonwn'),
     ]
     sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
     image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, blank=True)
     task_category = models.CharField(max_length=10, choices=TASK_CHOICES, blank=False)
     result = models.BooleanField(default=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=False, default='00')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, blank=False, default='11')
     testcases = models.ManyToManyField(TestCase)
     trigger_by = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name="tasks")
     time_trigger = models.DateTimeField(default=timezone.now)

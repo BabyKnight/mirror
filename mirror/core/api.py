@@ -220,6 +220,27 @@ def add_task(request):
     return HttpResponse(res)
 
 
+def cancel_task(request):
+    """
+    api for cancel a task by task id
+    """
+    if request.method == 'GET':
+        tsk_id = request.GET.get('id')
+        if not tsk_id:
+            res = -1
+        else:
+            try:
+                tsk = Task.objects.get(pk = tsk_id)
+                tsk.status = '14'
+                tsk.save()
+                res = 0
+            except Exception as e:
+                res = -2
+    else:
+        res = -1
+    return HttpResponse(res)
+
+
 @csrf_exempt
 def add_image(request):
     """
