@@ -84,6 +84,27 @@ function refreshTskSt(){
 	}
 }
 
+function showMsg(msg, type){
+    const msgBox = document.getElementById('msgBox')
+
+    msgBox.className = "fixed top-0 left-1/2 transform -translate-x-1/2 mt-4 w-96 p-4 rounded-xl shadow-lg text-white text-center transition-all duration-500 ease-in-out"
+    msgBox.textContent = msg
+
+    if (type === 'success'){
+        msgBox.classList.add('bg-green-500');
+    }else{
+        msgBox.classList.add('bg-red-500');
+    }
+
+    msgBox.classList.remove('opacity-0', '-translate-y-20');
+    msgBox.classList.add('opacity-100', 'translate-y-0');
+
+    setTimeout(() => {
+        msgBox.classList.remove('opacity-100', 'translate-y-0');
+        msgBox.classList.add('opacity-0', '-translate-y-20');
+    }, 5000);
+}
+
 document.addEventListener('DOMContentLoaded', function(){
     const links = document.querySelectorAll('.nav-link');
     const contentDiv = document.getElementById('main-content');
@@ -203,8 +224,14 @@ document.addEventListener('DOMContentLoaded', function(){
                             addSplPanel.classList.add('hidden')
                             addSplForm.reset();
                             reloadContent('/index/sample?rfna=1')
+                            showMsg("Sample has been registered successfully!", 'success');
+                        }
+                        else{
+                            showMsg("Some error occured when registering the sample!", 'error');
                         }
                     })
+                }else{
+                    showMsg("Please enter all required fields!", 'error');
                 }
             }else if(actionEvt === 'showAddTskPanel'){
                 const addSplPanel = document.getElementById('tsk-add-panel');
@@ -223,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 .then(response => response.text())
                 .then(data => {
                     reloadContent('/index/task/')
+                    showMsg("Task cancelled successfully!", 'success');
                 })
             }else if(actionEvt === 'submitAddTskForm'){
                 const addTskForm = document.getElementById('addTskForm');
@@ -282,8 +310,11 @@ document.addEventListener('DOMContentLoaded', function(){
                             addTskPanel.classList.add('hidden')
                             addTskForm.reset();
                             reloadContent('/index/task/')
+                            showMsg("Task has been added successfully!", 'success');
                         }
                     })
+                }else{
+                    showMsg("Please enter all required fields!", 'error');
                 }
             }
         }
