@@ -226,28 +226,65 @@ document.addEventListener('DOMContentLoaded', function(){
                 })
             }else if(actionEvt === 'submitAddTskForm'){
                 const addTskForm = document.getElementById('addTskForm');
-                const formData = new FormData(addTskForm);  
+                const requiredInputs = addTskForm.querySelectorAll('[data-required]');
+                let allFieldValid = true
+                let tcValid = false
+                requiredInputs.forEach(input => {
+                    if (input.id === 'tc'){
+                        const tcRequired = addTskForm.querySelectorAll('[tc-required]');
 
-                const csrfToken = formData.get('csrfmiddlewaretoken');
-                if(!csrfToken){
-                    alert('csrf token error')
-                }
-                fetch(addTskForm.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': csrfToken,   
-
-                    },
-                    body: formData,
-                })
-                .then(response =>{
-                    if(response.ok){
-                        const addTskPanel = document.getElementById('tsk-add-panel');
-                        addTskPanel.classList.add('hidden')
-                        addTskForm.reset();
-                        reloadContent('/index/task/')
+                        tcRequired.forEach(tc => {
+                            if (tc.checked){
+                                tcValid = true
+                            }
+                        })
+                    }else{  
+                        if (input.value.trim() === ''){
+                            input.classList.add('text-red-500');
+                            input.classList.remove('text-grey-700')
+                            allFieldValid = false
+                        }else{
+                            input.classList.remove('text-red-500');
+                            input.classList.add('text-grey-800')
+                        }
                     }
-                })
+                });
+
+                if (!tcValid){
+                    allFieldValid = false
+                    const tcLabel = document.getElementById('tc');
+                    tcLabel.classList.add('text-red-500');
+                    tcLabel.classList.remove('text-grey-700')
+                }else{
+                    const tcLabel = document.getElementById('tc');
+                    tcLabel.classList.remove('text-red-500');
+                    tcLabel.classList.add('text-grey-700')
+                }
+
+                if (allFieldValid){
+                    const formData = new FormData(addTskForm);      
+
+                    const csrfToken = formData.get('csrfmiddlewaretoken');
+                    if(!csrfToken){
+                        alert('csrf token error')
+                    }
+                    fetch(addTskForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,       
+
+                        },
+                        body: formData,
+                    })
+                    .then(response =>{
+                        if(response.ok){
+                            const addTskPanel = document.getElementById('tsk-add-panel');
+                            addTskPanel.classList.add('hidden')
+                            addTskForm.reset();
+                            reloadContent('/index/task/')
+                        }
+                    })
+                }
             }
         }
     })

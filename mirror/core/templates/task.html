@@ -35,7 +35,7 @@
                 <div class="col-span-3 flex flex-col pr-10"></div>
                 <div class="col-span-5 flex flex-col pr-10">
                     <label for="last_name" class="text-sm font-medium text-gray-700">* Select a task configuration</label>
-                    <fieldset class="space-y-3 grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-4 items-stretch" data-required>
+                    <fieldset class="space-y-3 grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-4 items-stretch">
                         <legend class="sr-only">Task Category</legend>
 
                           <div class="flex flex-col">
@@ -83,11 +83,11 @@
                 </div>
                 <div class="col-span-3 flex flex-col pr-10"></div>
                 <div class="col-span-2 flex flex-col pr-10">
-                    <label for="testcases" class="text-sm font-medium text-gray-700" data-required>* Select TestCases</label>
+                    <label for="testcases" class="text-sm font-medium text-gray-700" id='tc' data-required>* Select TestCases</label>
                     <div class="py-4">
                         {% for item in testcases %}
                           <label for="{{ item.id }}" class="flex items-center cursor-pointer select-none py-2">
-                            <input type="checkbox" name="testcases" id="{{ item.id }}" value="{{ item.id }}" class="form-checkbox text-indigo-600 rounded">
+                            <input type="checkbox" name="testcases" id="{{ item.id }}" value="{{ item.id }}" class="form-checkbox text-indigo-600 rounded" tc-required>
                             <span class="ml-2 text-gray-700">{{ item.name }}</span>
                           </label>
                         {% endfor %}

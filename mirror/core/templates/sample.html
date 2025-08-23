@@ -39,7 +39,7 @@
                 <div class="col-span-1 flex flex-col pr-10"></div>
                 <div class="col-span-2 flex flex-col pr-10">
                     <label for="build" class="text-sm font-medium text-gray-700">Build Phase</label>
-                    <select id="build" name="build" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700" data-required>
+                    <select id="build" name="build" class="w-full bg-white border-0 border-b-2 border-grey-800 outline-none px-4 py-2 focus:outline-none focus:border-blue-700">
                         <option value="">Please select Buils Phase</option>
                         {% for key, val in build_phase %}
                             <option value="{{ key }}">{{ val }}</option>
@@ -86,7 +86,7 @@
                 <th class="px-4 py-2 uppercase tracking-wider font-normal">No.</th>
                 <th class="px-4 py-2 uppercase tracking-wider font-normal">Platform</th>
                 <th class="px-4 py-2 uppercase tracking-wider font-normal">DPN</th>
-                <th class="px-4 py-2 uppercase tracking-wider font-normal">SSID</th>
+                <!-- <th class="px-4 py-2 uppercase tracking-wider font-normal">SSID</th> -->
                 <th class="px-4 py-2 uppercase tracking-wider font-normal">Service Tag</th>
                 <th class="px-4 py-2 uppercase tracking-wider font-normal">IP Address</th>
                 <th class="px-4 py-2 uppercase tracking-wider font-normal">Owner</th>
@@ -104,11 +104,11 @@
                     <td class="px-4 py-4">#{{ item.id}}</td>
                     <td class="px-4 py-4">{{ item.plat_name }}</td>
                     <td class="px-4 py-4">{{ item.dpn }}</td>
-                    <td class="px-4 py-4">
+                    <!-- <td class="px-4 py-4">
                         <span class="bg-gray-200 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-900 dark:text-gray-300">
                             0x{{ item.ssid }}
                         </span>
-                    </td>
+                    </td> -->
                     <td class="px-4 py-4">{{ item.service_tag }}</td>
                     <td class="px-4 py-4">{{ item.ip }}</td>
                     <td class="px-4 py-4">{{ item.owner }}</td>
