@@ -92,8 +92,10 @@ function showMsg(msg, type){
 
     if (type === 'success'){
         msgBox.classList.add('bg-green-500');
-    }else{
+    }else if (type === 'error' || type === 'fail'){
         msgBox.classList.add('bg-red-500');
+    }else{
+        msgBox.classList.add('bg-blue-500');
     }
 
     msgBox.classList.remove('opacity-0', '-translate-y-20');
