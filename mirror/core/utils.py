@@ -21,7 +21,7 @@ def get_chart_data(chart_type):
     now = datetime.now(timezone.utc)
     first_day_of_month = now.replace(day=1)
     start_of_week = now - timedelta(days=now.weekday())
-    six_month_ago = now - timedelta(days=180)
+    six_month_ago = now - timedelta(days=150)
 
     label = []
 

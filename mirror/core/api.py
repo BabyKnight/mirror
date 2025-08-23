@@ -1,5 +1,6 @@
 import os
 import json
+from decimal import Decimal
 from .models import Sample, Image, Task, TestCase, Platform, UserProfile
 from config.settings import REPORT_ROOT
 from django.http import HttpResponse, JsonResponse
@@ -260,11 +261,11 @@ def add_image(request):
             new_image = Image.objects.create(
                 image_name=img_name,
                 category=img_cat,
-                image_version=img_ver,
+                image_version=int(img_ver),
                 kernel_version=kern_ver,
-                release_date=rel_date,
+                release_date=rel_date+"+08:00",
                 file_path=path,
-                file_size=size,
+                file_size=Decimal(size),
                 sha256_hash=checksum,
                 )
             new_image.save()

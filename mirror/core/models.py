@@ -109,21 +109,27 @@ class Image(models.Model):
     ]
     image_name = models.CharField(max_length=60, unique=True)
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, default='', blank=True)
-    image_version = models.PositiveIntegerField(validators=[MaxValueValidator(999)])
-    kernel_version = models.CharField(max_length=30)
+    image_version = models.PositiveIntegerField(validators=[MaxValueValidator(999)], null=True, blank=True)
+    kernel_version = models.CharField(max_length=30, null=True, blank=True)
     release_date = models.DateTimeField(default=timezone.now)
     file_path = models.CharField(max_length=200, blank=False)
-    file_size = models.DecimalField(max_digits=4, decimal_places=2)
+    file_size = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
     # Temporarily allow non-unique sha256 hash, even same file in different filename
     sha256_hash = models.CharField(
         max_length=64,
-        validators=[RegexValidator(regex=r'^[a-fA-F0-9]{64}$')]
+        validators=[RegexValidator(regex=r'^[a-fA-F0-9]{64}$')],
+        null=True,
+        blank=True
     )
+
+    @property
+    def size(self):
+        return str(self.file_size)+'G'
 
     def __str__(self):
         return "<{}-{} ({})>".format(
             self.category,
-            self.image_version,
+            self.image_name,
             self.kernel_version,
         )
 
