@@ -454,6 +454,15 @@ def update_task_status(tsk_id, stat):
             return -1
         tsk.status = stat
         tsk.save()
+
+        if stat == '12':
+            spl = tsk.sample
+            spl.current_user = tsk.trigger_by
+            spl.save()
+        elif stat == '13':
+            spl = tsk.sample
+            spl.current_user = None
+            spl.save()
         return 0
     except Exception as e:
         return -1
