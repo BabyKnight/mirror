@@ -1,0 +1,26 @@
+<!-- Platform -->
+<div class="bg-white rounded-lg shadow-md p-6 mt-6">
+    <h2 class="text-xl font-semibold mb-4">Platforms</h2>
+    <table class="min-w-full divide-y divide-grey-200 text-left">
+        <thead class="bg-grey-100 whitespace-nowrap">
+            <tr class="bg-grey-100 text-sm">
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">No.</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">Name</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">Marketing Name</th>
+                <th class="px-4 py-2 uppercase tracking-wider font-normal">Category</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-grey-200 whitespace-nowrap">
+            {% for item in platform_list %}
+            	<tr class="bg-gray-50 text-xs">
+    			    <td class="bg-white px-4 py-2">#{{ item.id }}</td>
+    			    <td class="bg-white px-4 py-2">{{ item.name }}</td>
+    			    <td class="bg-white px-4 py-2">{{ item.mkt_name }}</td>
+    			    <td class="bg-white px-4 py-2">
+    				<span class="bg-indigo-100 text-indigo-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-indigo-900 dark:text-indigo-300">{{ item.category }}</span>
+    			    </td>
+                </tr>
+    {% endfor%}
+        </tbody>
+    </table>
+</div>

@@ -264,11 +264,14 @@ def testcase(request):
 
 
 def platform(request):
-    template_name = f"platform.html"
-    html = render_to_string(template_name)
-    return HttpResponse(html)
+    plat = Platform.objects.all()
+    plat_list = []
 
+    for i in plat:
+        plat_list.append(model_to_dict(i))
 
+    context = {
+        'platform_list': plat_list,
+    }
 
-
-
+    return render(request, 'platform.html', context)
