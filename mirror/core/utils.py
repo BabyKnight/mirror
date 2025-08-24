@@ -273,28 +273,18 @@ def get_sample_trends():
 
     # total samples by month
     start_of_this_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    start_of_last_month = (start_of_this_month - timedelta(days=1)).replace(day=1)
 
     total_sample_this_month = Sample.objects.filter(
                 time_created__gte=start_of_this_month,
                 time_created__lt=now
             ).count()
-    total_sample_last_month = Sample.objects.filter(
-            time_created__gte=start_of_last_month,
-            time_created__lt=start_of_this_month
-            ).count()
 
     total_sample = Sample.objects.count()
-
-    if total_sample_last_month == 0:
-        delta = total_sample_this_month
-    else:
-        delta = total_sample_this_month / total_sample_last_month
 
     sample_trend = {
                 'title': 'Total Sample',
                 'data': total_sample,
-                'delta': f"{delta:.2%}",
+                'delta': total_sample_this_month,
                 'moment': 'Since last month',
             }
     return sample_trend
@@ -309,29 +299,17 @@ def get_image_trends():
     start_of_week = now - timedelta(days=now.weekday())
     start_of_this_week = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
 
-    start_of_last_week = start_of_this_week - timedelta(days=7)
-    end_of_last_week = start_of_this_week - timedelta(seconds=1)
-
     total_image_this_week = Image.objects.filter(
                 release_date__gte=start_of_this_week,
                 release_date__lt=now
             ).count()
 
-    total_image_last_week = Image.objects.filter(
-                release_date__gte=start_of_last_week,
-                release_date__lt=end_of_last_week
-            ).count()
     total_image = Image.objects.count()
-
-    if total_image_last_week == 0:
-        delta = total_image_this_week
-    else:
-        delta = total_image_this_week / total_image_last_week
 
     image_trend = {
                 'title': 'Image Release',
                 'data': total_image,
-                'delta': f"{delta:.2%}",
+                'delta': total_image_this_week,
                 'moment': 'Since last week',
             }
     return image_trend
@@ -343,28 +321,18 @@ def get_task_trends():
     """
     now = datetime.now(timezone.utc)
     start_of_this_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    start_of_last_month = (start_of_this_month - timedelta(days=1)).replace(day=1)
 
     total_task_this_month = Task.objects.filter(
                 time_trigger__gte=start_of_this_month,
                 time_trigger__lt=now
             ).count()
 
-    total_task_last_month = Task.objects.filter(
-                time_trigger__gte=start_of_last_month,
-                time_trigger__lt=start_of_this_month
-            ).count()
     total_task = Task.objects.count()
-
-    if total_task_last_month == 0:
-        delta = total_task_this_month
-    else:
-        delta = total_task_this_month / total_task_last_month
 
     task_trend = {
                 'title': 'Total Task',
                 'data': total_task,
-                'delta': f"{delta:.2%}",
+                'delta': total_task_this_month,
                 'moment': 'Since last month'
             }
     return task_trend

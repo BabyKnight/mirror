@@ -197,6 +197,7 @@ def task(request):
         tsk['kernel_ver'] = i.image.kernel_version.split('-')[-1] if i.image else 'Unkonwn'
         tsk['trigger_by'] = i.trigger_by.user.get_full_name()
         tsk['st'] = i.status
+        tsk['log'] = i.log
         total_sec = (now - i.time_trigger).total_seconds()
         if total_sec < 3600:
             tsk['trigger_at'] = str(int(total_sec // 60)) + ' Minutes Ago'
