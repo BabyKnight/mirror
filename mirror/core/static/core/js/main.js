@@ -38,15 +38,20 @@ function refreshSplSt(){
        		})
        		.then(data => {
            		const st = data['data']['status_code']
-           		clearAllSt(stEl)
+                stIcon = stEl.querySelector('span')
+           		clearAllSt(stIcon)
            		if (st == '00') {
-           			stEl.classList.add('bg-gray-300')
+           			stIcon.classList.add('bg-gray-300')
+                    stEl.querySelector('div').textContent = 'Offline'
            		}else if(st == '10'){
-           			stEl.classList.add('bg-green-300')
+           			stIcon.classList.add('bg-green-300')
+                    stEl.querySelector('div').textContent = 'Available'
            		}else if(st == '11' || st == '12' || st == '13'){
-           			stEl.classList.add('bg-red-500')
+           			stIcon.classList.add('bg-red-500')
+                    stEl.querySelector('div').textContent = 'Busy'
            		}else{
-           			stEl.classList.add('bg-yellow-500')
+           			stIcon.classList.add('bg-yellow-500')
+                    stEl.querySelector('div').textContent = 'Unknown'
            		}
         	})
 	}
