@@ -72,18 +72,24 @@ function refreshTskSt(){
        		})
        		.then(data => {
            		const st = data['data']['task_status_code']
-           		clearAllSt(stEl)
+                stIcon = stEl.querySelector('span')
+           		clearAllSt(stIcon)
 
            		if (st == '11') {
-           			stEl.classList.add('bg-yellow-500')
+           			stIcon.classList.add('bg-yellow-500')
+                    stEl.querySelector('div').textContent = 'Pending'
            		}else if(st == '12'){
-           			stEl.classList.add('bg-red-500')
+           			stIcon.classList.add('bg-red-500')
+                    stEl.querySelector('div').textContent = 'Running'
            		}else if(st == '13'){
-           			stEl.classList.add('bg-green-500')
+           			stIcon.classList.add('bg-green-500')
+                    stEl.querySelector('div').textContent = 'Complete'
            		}else if(st == '14'){
-           			stEl.classList.add('bg-gray-600')
+           			stIcon.classList.add('bg-gray-600')
+                    stEl.querySelector('div').textContent = 'Cancelled'
            		}else{
-           			stEl.classList.add('bg-gray-200')
+           			stIcon.classList.add('bg-gray-200')
+                    stEl.querySelector('div').textContent = 'Unknown'
            		}
         	})
 	}
