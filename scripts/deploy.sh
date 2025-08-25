@@ -21,14 +21,21 @@ VIRTUALENV_DIR="${PROJECT_DIR}/environ"
 DJANGO_PROJECT_DIR="${PROJECT_DIR}/mirror"
 DJANGO_APP_NAME="config"
 
-GUNICORN_SOCK_PATH="/tmp/linux_automation.sock"
+WWW_PATH="/var/www/linux-automation"
+
+GUNICORN_SOCK_PATH="${WWW_PATH}/linux_automation.sock"
 GUNICORN_SERVICE_NAME="gunicorn_linux_automation.service"
 NGINX_CONF_NAME="linux_automation.conf"
 
 
 DJANGO_STATIC_ROOT="${DJANGO_PROJECT_DIR}/staticfiles"
+SITE_STATIC_ROOT="${WWW_PATH}/staticfiles"
 
 YOUR_DOMAIN="_" # Replace with your domain or IP
+
+echo "Creating the dependent directories"
+mkdir -p ${WWW_PATH}
+mkdir -p "${WWW_PATH}/download/"
 
 # --- Step 1: Create Gunicorn Systemd Service File ---
 echo "Creating Gunicorn systemd service file..."
@@ -82,7 +89,7 @@ server {
     error_log /var/log/nginx/linux_automation_error.log;
 
     location /static/ {
-        alias ${DJANGO_STATIC_ROOT}/;
+        alias ${SITE_STATIC_ROOT}/;
         expires 1y;
     }
 
