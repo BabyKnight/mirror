@@ -36,6 +36,7 @@ YOUR_DOMAIN="_" # Replace with your domain or IP
 echo "Creating the dependent directories"
 mkdir -p ${WWW_PATH}
 mkdir -p "${WWW_PATH}/download/"
+sudo setfacl -m g:${PROJECT_GROUP}:rwx,g:www-data:rwx  ${WWW_PATH}/download
 
 # --- Step 1: Create Gunicorn Systemd Service File ---
 echo "Creating Gunicorn systemd service file..."
