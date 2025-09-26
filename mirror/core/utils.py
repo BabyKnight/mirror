@@ -244,6 +244,8 @@ def get_testcase_data(tc_id=None):
                 'is_root_required': tc.is_root_required,
                 'ver': tc.version,
                 'owner': owner_profile.user.email if owner_profile else None,
+                'required_log': tc.required_log,
+                'estimated_duration': tc.estimated_duration,
             }
         except Exception as e:
             return None
@@ -261,6 +263,8 @@ def get_testcase_data(tc_id=None):
                 'is_root_required': i.is_root_required,
                 'ver': i.version,
                 'owner': owner_profile.user.email if owner_profile else None,
+                'required_log': i.required_log,
+                'estimated_duration': i.estimated_duration,
                 })
     return res
 

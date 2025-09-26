@@ -1,6 +1,8 @@
 from django.urls import re_path, path
 from .views import *
 from .api import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     # to be updated to direct to the home page as default
@@ -46,3 +48,6 @@ urlpatterns = [
     re_path(r'^api/case/delete/?$', dummy_view),
     re_path(r'^api/case/update/?$', dummy_view),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

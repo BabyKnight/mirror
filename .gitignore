@@ -4,3 +4,7 @@ __pycache__
 *.swp
 scripts/path_env
 db.sqlite3
+logs
+mirror/staticfiles
+mirror/core/migrations
+mirror/media/*

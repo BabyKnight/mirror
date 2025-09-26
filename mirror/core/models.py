@@ -147,6 +147,7 @@ class TestCase(models.Model):
     is_root_required = models.BooleanField(default=False)
     version = models.CharField(max_length=20)
     owner = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, blank=True, related_name="owned_testcase")
+    estimated_duration = models.IntegerField(null=True, blank=True, default=120)
 
     def __str__(self):
         return "<{}: {} (v{})>".format(

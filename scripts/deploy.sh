@@ -26,19 +26,38 @@ WWW_PATH="/var/www/linux-automation"
 GUNICORN_SOCK_PATH="${WWW_PATH}/linux_automation.sock"
 GUNICORN_SERVICE_NAME="gunicorn_linux_automation.service"
 NGINX_CONF_NAME="linux_automation.conf"
+NGINX_DEFAULT_CONF="/etc/nginx/sites-available/default"
 
 
 DJANGO_STATIC_ROOT="${DJANGO_PROJECT_DIR}/staticfiles"
 SITE_STATIC_ROOT="${WWW_PATH}/staticfiles"
+DJANGO_MEDIA_ROOT="${DJANGO_PROJECT_DIR}/media"
+SITE_MEDIA_ROOT="${WWW_PATH}/media"
 
 YOUR_DOMAIN="_" # Replace with your domain or IP
 
+# --- Step 1: remove duplicate files and directory ---
+echo "Removing existing files and directories"
+rm /etc/nginx/sites-available/linux_automation.conf
+rm /etc/nginx/sites-enabled/linux_automation.conf
+rm /etc/systemd/system/gunicorn_linux_automation.service
+
+# --- Step 2: create necessary directory/link ---
 echo "Creating the dependent directories"
 mkdir -p ${WWW_PATH}
+
+ln -s "${DJANGO_STATIC_ROOT}" "${SITE_STATIC_ROOT}"
+ln -s "${DJANGO_MEDIA_ROOT}" "${SITE_MEDIA_ROOT}"
+
+# --- Step 3: add user permission ---
+usermod -a -G dell www-data
+chmod -R g+rwX "${DJANGO_STATIC_ROOT}"
+chmod -R g+rwX "${DJANGO_MEDIA_ROOT}"
+
 mkdir -p "${WWW_PATH}/download/"
 sudo setfacl -m g:${PROJECT_GROUP}:rwx,g:www-data:rwx  ${WWW_PATH}/download
 
-# --- Step 1: Create Gunicorn Systemd Service File ---
+# --- Step 4: Create Gunicorn Systemd Service File ---
 echo "Creating Gunicorn systemd service file..."
 
 sudo cat > /etc/systemd/system/${GUNICORN_SERVICE_NAME} << EOL
@@ -67,7 +86,12 @@ EOL
 
 echo "Gunicorn service file created at /etc/systemd/system/${GUNICORN_SERVICE_NAME}"
 
-# --- Step 2: Reload and Start Gunicorn Service ---
+# --- Step 5: update nginx default config which using 80 port ---
+
+sed -i 's/listen 80 default_server;/listen 8080 default_server;/g' "$NGINX_DEFAULT_CONF"
+sed -i 's/listen \[::\]:80 default_server;/listen \[::\]:8080 default_server;/g' "$NGINX_DEFAULT_CONF"
+
+# --- Step 6: Reload and Start Gunicorn Service ---
 echo "Reloading systemd daemon..."
 sudo systemctl daemon-reload
 
@@ -78,7 +102,7 @@ sudo systemctl enable ${GUNICORN_SERVICE_NAME}
 echo "Gunicorn service has been started. You can check its status with: sudo systemctl status ${GUNICORN_SERVICE_NAME}"
 
 
-# --- Step 3: Create Nginx Configuration File ---
+# --- Step 7: Create Nginx Configuration File ---
 echo "Creating Nginx configuration file..."
 
 sudo cat > /etc/nginx/sites-available/${NGINX_CONF_NAME} << EOL
@@ -94,6 +118,11 @@ server {
         expires 1y;
     }
 
+    location /media/ {
+        alias ${SITE_MEDIA_ROOT}/;
+	add_header Content-Disposition 'attachment;';
+    }
+
     location / {
         proxy_pass http://unix:${GUNICORN_SOCK_PATH}:/;
         proxy_set_header Host \$host;
@@ -105,7 +134,7 @@ EOL
 
 echo "Nginx configuration file created at /etc/nginx/sites-available/${NGINX_CONF_NAME}"
 
-# --- Step 4: Enable and Restart Nginx Service ---
+# --- Step 8: Enable and Restart Nginx Service ---
 echo "Creating symlink to enable the site..."
 sudo ln -s /etc/nginx/sites-available/${NGINX_CONF_NAME} /etc/nginx/sites-enabled/
 
